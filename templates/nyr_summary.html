@@ -1,0 +1,927 @@
+{% extends 'dock_nyr_base.html' %}
+
+{% block content %}
+<br>
+
+{# Sekcja z podsumowaniem ilościowym - Zmieniona na styl glass-panel #}
+<div style="display: flex; align-items: stretch; justify-content: center; gap: 20px; max-width: 2640px; margin: 0 auto 25px auto; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 420px; max-width: 792px;"> {# Dostosowano max-width #}
+        <div class="glass-panel total-backlog-panel-styling"> {# Użyto stylu z dock_nyr_stock #}
+            <div style="padding: 1px; text-align: center; position: relative; z-index: 1;">
+                <div style="font-size: 25px; /* Dostosowano do dock_nyr_stock */ letter-spacing: 0.2px; font-family: 'Segoe UI Semibold', sans-serif; display: inline-flex; align-items: center; justify-content: center; font-weight: 700;">
+                    <span style="font-size: 1.1em; margin-right: 10px; line-height: 1;">📊</span>
+                    <span style="line-height: 1; color: #fff;">
+                        TOTAL PROCESSED BACKLOG:
+                        <span class="value" style="font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                          {{ total.TOTAL_BACKLOG_DISPLAY }} units
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Panele z ilościami palet i jednostek - Zmienione na styl glass-panel i glass-tile #}
+<div style="display: flex; gap: 16px; justify-content: center; margin: 0 auto 20px auto; max-width: 2640px; align-items: stretch; flex-wrap: wrap;">
+  <div style="flex: 1; min-width: 300px; max-width: 600px;">
+    <div class="glass-panel" style="padding: 15px;">
+        <div class="glass-panel-header" style="font-size: 22px; margin-bottom: 15px; padding-bottom: 8px;">PALLETS / CONTAINERS</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px;">
+            <div class="glass-tile" style="border-left: 5px solid rgba(217, 102, 20, 0.7);"> {# NVF-like color #}
+                <div class="tile-title">NVF PALLETS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.NVF_pallets }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(0, 167, 255, 0.7);"> {# TSI-like color #}
+                <div class="tile-title">TSI PALLETS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.TSI_pallets }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(40, 167, 69, 0.7);"> {# FBA SB-like color #}
+                <div class="tile-title">FBA SB</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.SB }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(0, 139, 139, 0.7);"> {# OC-like color #}
+                <div class="tile-title">OC</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.OC_count }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(204, 204, 102, 0.7);"> {# carrier-like color #}
+                <div class="tile-title">CC</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.CARRIER_count }}</div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div style="flex: 1; min-width: 300px; max-width: 600px;">
+    <div class="glass-panel" style="padding: 15px;">
+        <div class="glass-panel-header" style="font-size: 22px; margin-bottom: 15px; padding-bottom: 8px;">UNITS</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px;">
+            <div class="glass-tile" style="border-left: 5px solid rgba(217, 102, 20, 0.7);">
+                <div class="tile-title">NVF UNITS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.NVF_units }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(0, 167, 255, 0.7);">
+                <div class="tile-title">TSI UNITS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.TSI_units }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(40, 167, 69, 0.7);">
+                <div class="tile-title">FBA UNITS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.FBA_units }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(0, 139, 139, 0.7);">
+                <div class="tile-title">OC UNITS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.OC_units }}</div>
+            </div>
+            <div class="glass-tile" style="border-left: 5px solid rgba(204, 204, 102, 0.7);"> {# carrier-like color #}
+                <div class="tile-title">CC UNITS</div>
+                <div class="tile-value" style="font-size: 24px;">{{ total.CC_units|default:"0" }}</div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{# Panele "Delayed Rows" / "Other Rows" - Zmieniony styl #}
+<div style="display: flex; gap: 16px; justify-content: center; margin: 0 auto 25px auto; max-width: 1216px; align-items: stretch; flex-wrap: wrap;">
+  <div style="flex: 1; min-width: 300px; max-width: 600px;">
+    <div class="glass-panel summary-panel"> {# Dodano summary-panel dla targetowania hover tile #}
+        <div class="glass-panel-header delayed-header">DELAYED ROWS: <span id="delayed-rows-count" style="font-weight: 700; color: #f0f6fc;">0</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 5px;">
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">PALLETS</div> {# Usunięto klasę delayed-text #}
+            <div class="tile-value" style="font-size: 24px; color: white;" id="delayed-pallets">0</div>
+          </div>
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">UNITS</div> {# Usunięto klasę delayed-text #}
+            <div class="tile-value" style="font-size: 24px; color: white;" id="delayed-units">0</div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div style="flex: 1; min-width: 300px; max-width: 600px;">
+    <div class="glass-panel summary-panel"> {# Dodano summary-panel dla targetowania hover tile #}
+        <div class="glass-panel-header other-header">OTHER ROWS: <span id="other-rows-count" style="font-weight: 700; color: #f0f6fc;">0</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 5px;">
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">PALLETS</div> {# Usunięto klasę other-text #}
+            <div class="tile-value" style="font-size: 24px; color: white;" id="other-pallets">0</div>
+          </div>
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">UNITS</div> {# Usunięto klasę other-text #}
+            <div class="tile-value" style="font-size: 24px; color: white;" id="other-units">0</div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{# <<< ZMIANA START: Dodano nowe panele dla ROTOM z obsługą kliknięcia >>> #}
+<div style="display: flex; gap: 16px; justify-content: center; margin: 0 auto 25px auto; max-width: 1216px; align-items: stretch; flex-wrap: wrap;">
+  <div id="openReloadedModalBtn" style="flex: 1; min-width: 300px; max-width: 600px; cursor: pointer;">
+    <div class="glass-panel summary-panel">
+        <div class="glass-panel-header reloaded-header">RELOADED ROTOMS</div>
+        <div style="padding-top: 5px;">
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">SINCE LAST REFRESH</div>
+            <div class="tile-value" style="font-size: 24px; color: white;">{{ reloaded_rotoms|default:"0" }}</div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div id="openReleasedModalBtn" style="flex: 1; min-width: 300px; max-width: 600px; cursor: pointer;">
+    <div class="glass-panel summary-panel">
+        <div class="glass-panel-header released-header">RELEASED ROTOMS</div>
+        <div style="padding-top: 5px;">
+          <div class="glass-tile neutral-tile">
+            <div class="tile-title">SINCE LAST REFRESH</div>
+            <div class="tile-value" style="font-size: 24px; color: white;">{{ released_rotoms|default:"0" }}</div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{# <<< ZMIANA KONIEC >>> #}
+
+
+{# Przycisk "Clear Stock" - Przeniesiony na lewo nad tabelę #}
+<div style="text-align: left; margin-left: 2%; /* Based on table's container */ margin-right: 2%; margin-bottom: 15px;">
+  {% if user.is_superuser %}
+    <button onclick="clearAllStocks()" class="action-button clear-stock-button-custom">
+      CLEAR STOCK
+    </button>
+  {% endif %}
+</div>
+
+
+{# Tabela z danymi - Zastosowano styl .main-table-container i .table.glass-table #}
+<div class="main-table-container">
+    <table class="table glass-table" id="stock">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th onclick=sortTable(1)>ISA</th>
+          <th onclick=sortTable(2)>SBD/SLA</th>
+          <th onclick=sortTable(3)>LINE/ID</th>
+          <th class="styled-th th-nvf-pp" onclick=sortTable(4)>NVF PP</th>
+          <th class="styled-th th-pp-qty" onclick=sortTable(5)>PP QTY</th>
+          <th class="styled-th th-nvf-mix" onclick=sortTable(6)>NVF MIX</th>
+          <th class="styled-th th-mix-qty-nvf" onclick=sortTable(7)>MIX QTY</th>
+          <th class="styled-th th-fba-sb" onclick=sortTable(8)>FBA SB</th>
+          <th class="styled-th th-sb-qty" onclick=sortTable(9)>SB QTY</th>
+          <th class="styled-th th-tsi-pax" onclick=sortTable(10)>TSI_PAX</th>
+          <th class="styled-th th-pax-qty" onclick=sortTable(11)>PAX QTY</th>
+          <th class="styled-th th-tsi-mix" onclick=sortTable(12)>TSI MIX</th>
+          <th class="styled-th th-mix-qty-tsi" onclick=sortTable(13)>MIX_QTY</th>
+          <th onclick=sortTable(14)>COMMENT</th>
+          <th onclick=sortTable(15)>REASON FOR DELAY</th>
+          <th onclick=sortTable(16)>ADDED BY</th>
+          <th>DELETED ON</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for row in table_rows %}
+          {{ row|safe }}
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{# <<< ZMIANA START: Dodano HTML dla okien modalnych ROTOM >>> #}
+<div id="reloadedModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content glass-panel">
+        <div class="modal-header glass-panel-header">
+            <h3>Reloaded Rotoms List</h3>
+            <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul class="modal-list">
+                {% for trailer in reloaded_trailer_list %}
+                    <li>{{ trailer }}</li>
+                {% empty %}
+                    <p>No reloaded ROTOMs to display.</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="releasedModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content glass-panel">
+        <div class="modal-header glass-panel-header">
+            <h3>Released Rotoms List</h3>
+            <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul class="modal-list">
+                {% for trailer in released_trailer_list %}
+                    <li>{{ trailer }}</li>
+                {% empty %}
+                    <p>No released ROTOMs to display.</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{# <<< ZMIANA KONIEC >>> #}
+
+
+{# Skrypty JavaScript - zaktualizowane #}
+<script>
+// --- Core Table Functions ---
+function sortTable(columnIndex) {
+  const table = document.querySelector('.table');
+  const tbody = table.getElementsByTagName('tbody')[0];
+  const rows = Array.from(tbody.getElementsByTagName('tr'));
+  const jsIndex = columnIndex;
+
+  const isNumeric = ![2, 14, 15, 16, 17].includes(jsIndex) && rows.every(row => {
+    const cellValue = row.getElementsByTagName('td')[jsIndex]?.innerText || '';
+    return cellValue === '' || (!isNaN(parseFloat(cellValue)) && isFinite(cellValue));
+  });
+
+  rows.sort((a, b) => {
+    let aValue = a.getElementsByTagName('td')[jsIndex]?.innerText || '';
+    let bValue = b.getElementsByTagName('td')[jsIndex]?.innerText || '';
+
+    if (jsIndex === 2 || jsIndex === 17) { // SBD/SLA or DELETED ON column
+        const parseDateTime = (dateTimeStr) => {
+            if (!dateTimeStr || dateTimeStr === 'N/A') return null;
+            let mainPart = dateTimeStr.split(' by ')[0].trim();
+            const parts = mainPart.split(' ');
+            if (parts.length < 2 && mainPart.includes('T')) {
+                 parts[0] = mainPart.substring(0,10);
+                 parts[1] = mainPart.substring(11,16);
+            } else if (parts.length !== 2) { return null; }
+
+            const dateParts = parts[0].split('-');
+            const timeParts = parts[1].split(':');
+            if (dateParts.length !== 3 || timeParts.length !== 2) return null;
+            const dateObj = new Date(
+                parseInt(dateParts[0], 10), parseInt(dateParts[1], 10) - 1, parseInt(dateParts[2], 10),
+                parseInt(timeParts[0], 10), parseInt(timeParts[1], 10)
+            );
+            return isNaN(dateObj) ? null : dateObj;
+        };
+        const dateA = parseDateTime(aValue);
+        const dateB = parseDateTime(bValue);
+        if (dateA === null && dateB === null) return 0;
+        if (dateA === null) return -1;
+        if (dateB === null) return 1;
+        return dateA - dateB;
+    }
+    else if (isNumeric) {
+      aValue = aValue === '' || aValue === '-' ? -Infinity : parseFloat(aValue);
+      bValue = bValue === '' || bValue === '-' ? -Infinity : parseFloat(bValue);
+      if (isNaN(aValue)) aValue = -Infinity;
+      if (isNaN(bValue)) bValue = -Infinity;
+      return aValue - bValue;
+    } else {
+      aValue = aValue.toLowerCase();
+      bValue = bValue.toLowerCase();
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
+      return 0;
+    }
+  });
+
+  const headerCell = table.getElementsByTagName('th')[columnIndex];
+  const isSortedAsc = headerCell.classList.contains('asc');
+
+  const headerCells = Array.from(table.getElementsByTagName('th'));
+  headerCells.forEach(cell => { cell.classList.remove('asc', 'desc'); });
+
+  if (isSortedAsc) {
+    rows.reverse();
+    headerCell.classList.add('desc');
+  } else {
+    headerCell.classList.add('asc');
+  }
+
+  while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+  rows.forEach(row => tbody.appendChild(row));
+
+  applyStylesAfterSort();
+}
+
+function applyStylesAfterSort() {
+    applyConditionalCellColors();
+    applyLineColumnStyles();
+    highlightSBDCells();
+    attachHoverListeners();
+    tagHighlight();
+    calculateDelayedAndOtherRows();
+}
+
+function highlightSBDCells() {
+  const rows = document.querySelectorAll('#stock tbody tr');
+  rows.forEach(row => {
+    const dateCell = row.cells[2]; // SBD/SLA column
+    if (!dateCell) return;
+
+    let existingBgColor = dateCell.style.backgroundColor;
+    if (!row.classList.contains('row-hover')) {
+        if (existingBgColor === 'rgb(214, 6, 6)' || dateCell.classList.contains('delayed-critical')) {
+            dateCell.style.backgroundColor = 'rgb(214, 6, 6)';
+            dateCell.style.color = 'white';
+            dateCell.style.border = '1px solid black';
+        }
+        else if (existingBgColor === 'rgb(189, 176, 43)' || dateCell.classList.contains('delayed-warning')) {
+            dateCell.style.backgroundColor = 'rgb(189, 176, 43)';
+            dateCell.style.color = 'white';
+            dateCell.style.border = '1px solid black';
+        }
+        else {
+            dateCell.style.border = '';
+        }
+    }
+  });
+}
+
+
+function applyConditionalCellColors() {
+  const columnColors = {
+    4: 'rgba(96, 71, 56, 0.85)',   // NVF PP
+    5: 'rgba(99, 89, 83, 0.85)',   // PP QTY
+    6: 'rgba(100, 96, 62, 0.85)',  // NVF MIX
+    7: 'rgba(105, 102, 82, 0.851)',  // MIX QTY
+    8: 'rgba(59, 100, 72, 0.85)',  // FBA SB
+    9: 'rgba(73, 101, 82, 0.85)',  // SB QTY
+    10: 'rgba(62, 74, 102, 0.85)', // TSI PAX
+    11: 'rgba(73, 81, 100, 0.85)', // PAX QTY
+    12: 'rgba(81, 72, 97, 0.85)',  // TSI MIX
+    13: 'rgba(89, 83, 98, 0.85)'   // MIX QTY (po TSI MIX)
+  };
+
+  const rows = document.querySelectorAll('#stock tbody tr');
+  rows.forEach((row, rowIndex) => {
+    Object.entries(columnColors).forEach(([colIndexStr, color]) => {
+      const colIndex = parseInt(colIndexStr);
+      const cell = row.cells[colIndex];
+      if (cell) {
+        const content = cell.textContent.trim();
+        if (colIndex !== 2) {
+            cell.style.backgroundColor = '';
+        }
+        cell.style.boxShadow = '';
+
+        if (content && content !== '-' && content !== '') {
+            cell.style.backgroundColor = color;
+            cell.style.boxShadow = 'inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15)';
+        } else {
+            if (colIndex >= 4 && colIndex <= 13) {
+                if (rowIndex % 2 === 0) {
+                     cell.style.backgroundColor = 'rgba(60, 63, 69, 0.6)';
+                } else {
+                     cell.style.backgroundColor = 'rgba(50, 53, 59, 0.6)';
+                }
+                cell.style.borderRadius = '4px'; // Dodano border-radius
+                cell.style.boxShadow = 'inset 0 0 3px rgba(0,0,0,0.1)';
+            }
+        }
+      }
+    });
+  });
+}
+
+
+function applyLineColumnStyles() {
+  const rows = document.querySelectorAll('#stock tbody tr');
+  rows.forEach(row => {
+    const lineCell = row.cells[3];
+    if (!lineCell) return;
+    const lineText = lineCell.textContent.toUpperCase();
+    lineCell.classList.remove('line-dock', 'line-ib', 'line-default');
+    if (lineText.includes('DOCK')) { lineCell.classList.add('line-dock'); }
+    else if (lineText.includes('IB') || lineText.includes('PS') || lineText.includes('SB') || lineText.includes('GATE')) { lineCell.classList.add('line-ib'); }
+    else { lineCell.classList.add('line-default'); }
+  });
+}
+
+function attachHoverListeners() {
+    const rows = document.querySelectorAll('#stock tbody tr');
+    rows.forEach((row) => {
+        row.removeEventListener('mouseenter', handleMouseEnter);
+        row.removeEventListener('mouseleave', handleMouseLeave);
+        row.addEventListener('mouseenter', handleMouseEnter);
+        row.addEventListener('mouseleave', handleMouseLeave);
+    });
+}
+
+function handleMouseEnter(event) {
+    event.currentTarget.classList.add('row-hover');
+}
+function handleMouseLeave(event) {
+    event.currentTarget.classList.remove('row-hover');
+    highlightSBDCells();
+}
+
+function tagHighlight() {
+    const contentArea = document.querySelector('.table tbody');
+    if (!contentArea) return;
+
+    contentArea.querySelectorAll('tr').forEach(tr => {
+        const td = tr.cells[14];
+        if (!td) return;
+        if (td.dataset.tagsHighlighted === 'true' && !td.innerHTML.includes('#')) return;
+
+        let textContent = td.innerHTML;
+        if (textContent.includes('#') && !textContent.includes('<span class="tag-highlight')) {
+            const tagRegex = /(#(?:[A-Z0-9_]+(?: [A-Z0-9_]+)*)#)/gi;
+            let newHtml = td.innerHTML.replace(tagRegex, (match) => {
+                const cleanedTagForClass = match.replace(/#/g, '').replace(/\s+/g, '_').toLowerCase();
+                const tagText = match.replace(/#/g, '');
+                const tagClass = `${cleanedTagForClass}-highlight`;
+                return `<span class="tag-highlight ${tagClass}">${tagText}</span>`;
+            });
+            if (td.innerHTML !== newHtml) {
+                td.innerHTML = newHtml;
+            }
+        }
+        td.dataset.tagsHighlighted = 'true';
+    });
+}
+
+
+function calculateDelayedAndOtherRows() {
+  const rows = document.querySelectorAll('#stock tbody tr');
+  let delayedRowsCount = 0, delayedPallets = 0, delayedUnits = 0;
+  let otherRowsCount = 0, otherPallets = 0, otherUnits = 0;
+
+  rows.forEach(row => {
+    const dateCell = row.cells[2];
+    if (!dateCell) return;
+
+    const isDelayed = dateCell.style.backgroundColor === 'rgb(214, 6, 6)' || dateCell.classList.contains('delayed-critical');
+
+    const nvfPp = parseInt(row.cells[4]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const nvfMixP = parseInt(row.cells[6]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const fbaSB = parseInt(row.cells[8]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const tsiPax = parseInt(row.cells[10]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const tsiMixP = parseInt(row.cells[12]?.textContent.replace(/[^0-9]/g, '')) || 0;
+
+    const nvfU = parseInt(row.cells[5]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const mixU_nvf = parseInt(row.cells[7]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const sbQty = parseInt(row.cells[9]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const tsiU = parseInt(row.cells[11]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const mixU_tsi = parseInt(row.cells[13]?.textContent.replace(/[^0-9]/g, '')) || 0;
+
+    const rowPallets = nvfPp + nvfMixP + fbaSB + tsiPax + tsiMixP;
+    const rowUnits = nvfU + mixU_nvf + sbQty + tsiU + mixU_tsi;
+
+    if (isDelayed) {
+      delayedRowsCount++;
+      delayedPallets += rowPallets;
+      delayedUnits += rowUnits;
+    } else {
+      otherRowsCount++;
+      otherPallets += rowPallets;
+      otherUnits += rowUnits;
+    }
+  });
+
+  document.getElementById('delayed-rows-count').textContent = delayedRowsCount;
+  document.getElementById('delayed-pallets').textContent = delayedPallets;
+  document.getElementById('delayed-units').textContent = delayedUnits;
+  document.getElementById('other-rows-count').textContent = otherRowsCount;
+  document.getElementById('other-pallets').textContent = otherPallets;
+  document.getElementById('other-units').textContent = otherUnits;
+}
+
+
+async function clearAllStocks() {
+    if (!confirm('Are you sure you want to delete ALL stocks from summary? This action cannot be undone!')) {
+        return;
+    }
+    try {
+        const csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        const csrfToken = csrfTokenElement ? csrfTokenElement.value : '{{ csrf_token }}';
+        if (!csrfToken) { throw new Error('CSRF token not found.'); }
+
+        const response = await fetch('{% url "clear_summary_stocks" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            let errorMsg = `HTTP error! status: ${response.status}`;
+            try { const errorData = await response.json(); errorMsg = errorData.error || errorMsg; } catch (e) {}
+            throw new Error(errorMsg);
+        }
+        const result = await response.json();
+        if (result.success) {
+            alert(result.message || 'Stocks cleared successfully.');
+            window.location.reload();
+        } else {
+            alert('Error: ' + (result.error || 'Unknown error clearing stocks.'));
+        }
+    } catch (error) {
+        console.error('Error clearing stocks:', error);
+        alert('Error clearing stocks: ' + error.message);
+    }
+}
+
+// <<< ZMIANA START: Dodano logikę do obsługi okien modalnych ROTOM >>>
+function setupRotomModals() {
+    // Get modals
+    const reloadedModal = document.getElementById('reloadedModal');
+    const releasedModal = document.getElementById('releasedModal');
+
+    // Get buttons that open the modals
+    const openReloadedBtn = document.getElementById('openReloadedModalBtn');
+    const openReleasedBtn = document.getElementById('openReleasedModalBtn');
+
+    // Get all close buttons
+    const closeButtons = document.querySelectorAll('.modal-close-btn');
+
+    // Function to open a modal
+    const openModal = (modal) => {
+        if (modal) modal.style.display = 'flex';
+    };
+
+    // Function to close a modal
+    const closeModal = (modal) => {
+        if (modal) modal.style.display = 'none';
+    };
+
+    // Event listeners for open buttons
+    if (openReloadedBtn) openReloadedBtn.addEventListener('click', () => openModal(reloadedModal));
+    if (openReleasedBtn) openReleasedBtn.addEventListener('click', () => openModal(releasedModal));
+
+    // Event listener for close buttons
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            closeModal(reloadedModal);
+            closeModal(releasedModal);
+        });
+    });
+
+    // Event listener for clicking outside the modal content
+    window.addEventListener('click', (event) => {
+        if (event.target === reloadedModal) closeModal(reloadedModal);
+        if (event.target === releasedModal) closeModal(releasedModal);
+    });
+
+    // Event listener for Escape key
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeModal(reloadedModal);
+            closeModal(releasedModal);
+        }
+    });
+}
+// <<< ZMIANA KONIEC >>>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    if (!csrfTokenInput) {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden'; hiddenInput.name = 'csrfmiddlewaretoken'; hiddenInput.value = '{{ csrf_token }}';
+        const form = document.querySelector('form') || document.body;
+        form.appendChild(hiddenInput);
+    }
+    applyStylesAfterSort();
+    setupRotomModals(); // <<< ZMIANA: Wywołanie funkcji konfigurującej modale
+});
+
+</script>
+
+<style>
+    body {
+        background-color: #0d1117;
+        color: #c9d1d9;
+        font-family: 'Segoe UI', sans-serif;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        font-size: 15px;
+    }
+    /* ZMODYFIKOWANO: Usunięcie niebieskiego podświetlenia hyperlinków */
+    a {
+        color: #c9d1d9; /* Kolor domyślnego tekstu */
+        text-decoration: none;
+    }
+    a:hover {
+        color: #e0e0e0; /* Lekko jaśniejszy odcień przy najechaniu */
+        text-decoration: none;
+    }
+
+    .glass-panel {
+        background: rgba(30, 35, 42, 0.75);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        border: 1px solid rgba(139, 148, 158, 0.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0,0,0,0.1);
+        padding: 20px;
+        position: relative;
+    }
+    .glass-panel-header {
+        font-family: 'Segoe UI Semibold', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #c9d1d9;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.15);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+    .delayed-header {
+        font-size: 22px !important; margin-bottom: 15px !important;
+        border-bottom: 4px solid #d60606 !important;
+        padding-bottom: 8px !important;
+    }
+    .other-header {
+        font-size: 22px !important; margin-bottom: 15px !important;
+        border-bottom: 4px solid #28a745 !important;
+        padding-bottom: 8px !important;
+    }
+    
+    .reloaded-header {
+        font-size: 22px !important; margin-bottom: 15px !important;
+        border-bottom: 4px solid #58a6ff !important; /* Blue color */
+        padding-bottom: 8px !important;
+    }
+    .released-header {
+        font-size: 22px !important; margin-bottom: 15px !important;
+        border-bottom: 4px solid #3fb950 !important; /* Green color */
+        padding-bottom: 8px !important;
+    }
+
+
+    .glass-tile {
+        background: rgba(40, 45, 52, 0.6);
+        backdrop-filter: blur(8px) saturate(130%);
+        -webkit-backdrop-filter: blur(8px) saturate(130%);
+        border: 1px solid rgba(139, 148, 158, 0.15);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .glass-tile:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        border-color: rgba(88, 166, 255, 0.3);
+    }
+    .tile-title { font-size: 16px; font-weight: 500; color: #8b949e; margin-bottom: 8px; }
+    .tile-value { font-size: 22px; font-weight: 700; color: #c9d1d9; }
+
+    .neutral-tile {
+        background: rgba(60, 65, 72, 0.4) !important;
+        border-color: rgba(139, 148, 158, 0.2) !important;
+    }
+    /* ZMODYFIKOWANO: Usunięcie specyficznych kolorów dla delayed-text i other-text */
+    .delayed-text, .other-text {
+        color: #8b949e !important; /* Ustawienie domyślnego koloru tile-title */
+    }
+
+    /* ZMODYFIKOWANO: Usunięcie animacji hover dla kafelków w panelach summary */
+    .summary-panel .glass-tile:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Bazowy cień z .glass-tile */
+        border-color: rgba(139, 148, 158, 0.15); /* Bazowy border-color z .glass-tile */
+    }
+
+
+    .total-backlog-panel-styling {
+        background: linear-gradient(135deg, rgba(14, 55, 150, 0.85), rgba(10, 40, 120, 0.85));
+        border-color: rgba(14, 55, 150, 0.3);
+        box-shadow: 0 4px 20px rgba(14, 55, 150, 0.3), 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .total-backlog-panel-styling .value {
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .main-table-container {
+        width: 96%; margin: 0 auto 25px auto;
+        border-radius: 12px;
+        overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border: 0px solid rgba(139, 148, 158, 0.2);
+    }
+    .table.glass-table {
+        width: 100%; border-collapse: separate; border-spacing: 0;
+        padding: 0; border-radius: 0;
+        box-shadow: none;
+        background: rgba(22, 27, 34, 0.8);
+    }
+    .table.glass-table th {
+        background: rgba(40, 45, 52, 0.85); color: #c9d1d9;
+        font-weight: 700; cursor: pointer; padding: 15px 12px;
+        letter-spacing: 0.5px; border: 1px solid rgba(60, 65, 72, 0.7);
+        border-bottom-width: 2px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: sticky; top: 0; z-index: 10;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        text-transform: uppercase; white-space: nowrap;
+        font-size: 20px;
+    }
+    .table.glass-table th:nth-child(1), .table.glass-table th:nth-child(18) { cursor: default; }
+    .table.glass-table th:nth-child(1):hover, .table.glass-table th:nth-child(18):hover {
+        background-color: rgba(40, 45, 52, 0.85);
+        color: #c9d1d9;
+        box-shadow: none;
+    }
+    .table.glass-table th:not(:nth-child(1)):not(:nth-child(18)):hover { background-color: rgba(50, 55, 62, 0.9); color: #fff; }
+    .table.glass-table th.asc::after { content: " ▲"; color: #58a6ff; font-size: 0.9em; }
+    .table.glass-table th.desc::after { content: " ▼"; color: #ff7b72; font-size: 0.9em; }
+
+    .table.glass-table th.styled-th {
+        position: relative;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.01) 50%, rgba(0,0,0,0.05) 100%);
+        box-shadow: inset 0px 1px 1px 0px rgba(255,255,255,0.12),
+                    inset 0px -1px 1px 0px rgba(0,0,0,0.25),
+                    0 1px 2px rgba(0,0,0,0.15);
+        border-bottom: 1px solid rgba(0,0,0,0.35);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    }
+    /* ZMODYFIKOWANO: Kolory nagłówków kolumn z nyr_stock */
+    .table.glass-table th.th-nvf-pp    { background-color: rgba(138, 83, 49, 0.902) !important; }
+    .table.glass-table th.th-pp-qty    { background-color: rgba(125, 101, 86, 0.902) !important; }
+    .table.glass-table th.th-nvf-mix   { background-color: rgba(120, 113, 47, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-nvf { background-color: rgba(130, 124, 65, 0.902) !important; }
+    .table.glass-table th.th-fba-sb    { background-color: rgba(57, 122, 78, 0.902) !important; }
+    .table.glass-table th.th-sb-qty    { background-color: rgba(68, 138, 90, 0.902) !important; }
+    .table.glass-table th.th-tsi-pax   { background-color: rgba(64, 85, 135, 0.902) !important; }
+    .table.glass-table th.th-pax-qty   { background-color: rgba(88, 111, 166, 0.902) !important; }
+    .table.glass-table th.th-tsi-mix   { background-color: rgba(94, 69, 135, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-tsi { background-color: rgba(115, 95, 145, 0.902) !important; }
+
+
+    .table.glass-table td {
+        padding: 12px 10px;
+        border: 1px solid rgba(60, 65, 72, 0.5);
+        position: relative;
+        font-weight: 700;
+        text-align: center; vertical-align: middle; color: #c9d1d9;
+        transition: background-color 0.15s ease, filter 0.15s ease;
+        font-size: 20px;
+    }
+    /* CSS Row Striping - base for all cells, JS might override for specific cases */
+    .table.glass-table tbody tr:nth-child(odd) td { background-color: rgba(35, 42, 52, 0.7); }
+    .table.glass-table tbody tr:nth-child(even) td { background-color: rgba(25, 30, 38, 0.75); }
+
+    .table.glass-table tbody tr.row-hover td {
+        position: relative;
+    }
+    .table.glass-table tbody tr.row-hover td::after {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(200, 200, 200, 0.1);
+        pointer-events: none; z-index: 1;
+    }
+    .table.glass-table tbody tr.row-hover td[style*="rgb(214, 6, 6)"]::after,
+    .table.glass-table tbody tr.row-hover td[style*="rgb(189, 176, 43)"]::after {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .table.glass-table td:nth-child(4) { position: relative; padding-left: 25px !important; }
+    .table.glass-table td:nth-child(4)::before {
+        content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+        width: 8px; height: 65%; border-radius: 4px;
+        transition: background-color 0.3s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .table.glass-table td:nth-child(4).line-dock::before { background-color: #ff7b00; }
+    .table.glass-table td:nth-child(4).line-ib::before { background-color: #007bff; }
+    .table.glass-table td:nth-child(4).line-default::before { background-color: #800080; }
+
+    .table.glass-table tbody tr td:nth-child(16) { color: #E53935; font-weight: bold; }
+
+
+    span.tag-highlight {
+        font-weight: 600; padding: 4px 10px; border-radius: 16px;
+        display: inline-block; margin: 1px 3px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.4);
+        transition: all 0.25s ease; position: relative;
+        text-transform: uppercase; font-size: 0.9em; letter-spacing: 0.5px;
+        vertical-align: middle; border: none; line-height: 1.5;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.05) 51%, rgba(0,0,0,0.1) 100%);
+        overflow: hidden; color: white;
+    }
+    span.tag-highlight:hover {
+        filter: brightness(1.2); transform: translateY(-1px) scale(1.02);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.5);
+    }
+    span.mix-highlight { background-color: #1f7a38; }
+    span.pax-highlight { background-color: #856d4d; }
+    span.oc-highlight { background-color: #008B8B; }
+    span.tl-highlight { background-color: #CC5500; }
+    span.hv-highlight { background-color: #808000; }
+    span.cage-highlight { background-color: #aa46ce; }
+    span.unsell-highlight { background-color: #7C51C9; }
+    span.wro1_sell-highlight { background-color: #483D8B; }
+    span.rotom-highlight { color: #222222; background-color: #66CCFF; }
+    span.carrier-highlight { color: #333333; background-color: #CCCC66; }
+    span.ats-highlight { background-color: #4682B4; }
+    span.prep-highlight { color: #111111; background-color: #FFB6C1; }
+    span.oversize-highlight { background-color: #FF8C00; }
+    span.do_przebudowy-highlight, span.do_przekładana-highlight, span.do_streczowania-highlight, span.double_stack-highlight {
+        background-color: #B03060;
+    }
+    span.do_sprawdzenia-highlight { background-color: #848482; }
+    span.pet_food-highlight { background-color: #006400; }
+    span.karma-highlight { background-color: #D95F02; }
+
+
+    .action-button.clear-stock-button-custom {
+        padding: 12px 22px; font-size: 16px; font-weight: 600;
+        color: white !important; text-decoration: none !important;
+        border-radius: 6px; border: 1px solid rgba(139, 148, 158, 0.3);
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-out;
+        cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        background-color: rgba(218, 55, 68, 0.8);
+        border-color: rgba(218,55,68,0.4);
+        box-shadow: 0 1px 0 rgba(27,31,35,.04),inset 0 1px 0 hsla(0,0%,100%,.25);
+        will-change: transform;
+    }
+    .action-button.clear-stock-button-custom:hover {
+        background-color: rgba(218, 55, 68, 0.95); border-color: rgba(218,55,68,0.6);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); transform: translateY(-1px);
+        color: white !important;
+    }
+    .action-button.clear-stock-button-custom:active {
+        transform: translateY(0px) scale(0.98); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    /* <<< ZMIANA START: Style dla okien modalnych ROTOM >>> */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        transition: opacity 0.3s ease;
+    }
+    .modal-content {
+        max-width: 600px;
+        width: 90%;
+        padding: 0;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        margin: 0;
+        font-size: 24px !important;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.25);
+    }
+    .modal-header h3 {
+        margin: 0;
+        font-size: 22px;
+    }
+    .modal-close-btn {
+        background: none;
+        border: none;
+        color: #c9d1d9;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0 10px;
+        line-height: 1;
+    }
+    .modal-close-btn:hover {
+        color: #fff;
+    }
+    .modal-body {
+        padding: 25px;
+        overflow-y: auto;
+        flex-grow: 1;
+    }
+    .modal-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .modal-list li {
+        background-color: rgba(40, 45, 52, 0.7);
+        padding: 12px 18px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: 500;
+        border: 1px solid rgba(139, 148, 158, 0.15);
+    }
+    .modal-list p {
+        font-style: italic;
+        color: #8b949e;
+    }
+    /* <<< ZMIANA KONIEC >>> */
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="300">
+    <title>{% block title %}IB BUFFOR{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/clear_field.js' %}"></script>
+    {% block extrahead %}{% endblock %}
+    <style>body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000;
+  height: 50px;
+  padding: 50px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  font-size: 35px;
+}
+
+a:hover {
+  background-color: #ccc;
+}
+
+.navbar .active {
+  background-color: #ff0000;
+}
+form {
+	font-size:29px;
+	color: white;
+    float: left;
+    width: 100%;
+    padding: 20px;
+    background-color: #000000;
+}
+label{
+  font-size: 30px;
+}
+input[type=number] {
+  width: 50%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  font-size: 25px;
+  text-align:right;
+}
+input[type=text] {
+  width: 50%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  font-size: 25px;
+  text-align:right;
+}
+input[type="submit"] {
+  background-color: silver;
+  color: black;
+  width:30%;
+  height:60px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #ccc;
+}
+#first_block{
+  font-size: 30px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+}
+#form_total{
+  text-align: center;
+  color: white;
+    float: left;
+    width: 100%;
+    padding: 20px;
+    background-color: #000000;
+}
+.nyr{
+  float: inline-end;
+}
+#form_input{
+  float: left;
+  display: flex;
+  align-items: right;
+  text-align: end;
+}
+#form_clear{
+  padding-top: 14px;
+  float: left;
+}
+.clear_label{
+  text-align: center;
+	padding: 7px;
+  padding-top: 13px;
+  margin-top: 6px;
+	width:45px;
+	height:45px;
+	color:white;
+	font-size:30px;
+	background-color:red;
+	display: inline-block;
+}
+table {
+  margin: 40px;
+  border-collapse: collapse;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+
+th {
+	width: 60px;
+  background-color: #f5f5f5;
+  color: #000;
+  font-weight: bold;
+  border: 1px solid #000;
+}
+
+table tr {
+  background-color: var(--row-color);
+}
+
+td {
+  width: 60px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #000;
+}
+
+table tr:nth-child(1) {
+  --row-color: #fc9191;
+}
+
+table tr:nth-child(2) {
+  --row-color: #ffff70;
+}
+
+table tr:nth-child(3) {
+  --row-color: #72ff72;
+}
+
+table tr:nth-child(4) {
+  --row-color: #68dfdf;
+}
+
+table tr:nth-child(5) {
+  --row-color: #8383f3;
+}
+
+table tr:nth-child(6) {
+  --row-color: #ff99ff;
+}
+
+table tr:nth-child(7),
+table tr:nth-child(8),
+table tr:nth-child(9) {
+  --row-color: #a1a1a1;
+}
+	</style>
+<script>
+function clear_form(id){
+    console.log(id);
+        document.getElementById(id).value = '';
+        document.getElementById(id).focus();
+    }
+</script>
+</head>
+<body>
+<nav>
+    <a href="{% url 'P1Page' %}">P1</a>
+    <a href="{% url 'P2Page' %}">P2</a>
+    <a href="{% url 'P3Page' %}">P3</a>
+    <a href="{% url 'P4Page' %}">P4</a>
+    <a href="{% url 'P5Page' %}">P5</a>
+    <a href="{% url 'PaxPage' %}">Pax</a>
+    <a href="{% url 'VretPage' %}">Vret</a>
+    <a href="{% url 'PackPage' %}">Pack</a>
+    <a href="{% url 'RecievePage' %}">RCV</a>
+    <a href="{% url 'TotalPage' %}">Total</a>
+</nav>
+{% block content %}
+{% endblock %}
+</body>
+</html>

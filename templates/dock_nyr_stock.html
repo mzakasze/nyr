@@ -1,0 +1,1809 @@
+{% extends 'dock_nyr_base.html' %}
+
+{% block content %}
+<br>
+
+{# Pasek TOTAL BACKLOG #}
+<div style="display: flex; align-items: stretch; justify-content: center; gap: 20px; max-width: 2640px; margin: 0 auto 35px auto; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 420px; max-width: 500px;">
+        <div class="glass-panel total-backlog-panel-styling">
+            <div style="padding: 1px; text-align: center; position: relative; z-index: 1;">
+                <div style="font-size: 25px; letter-spacing: 0.2px; font-family: 'Segoe UI Semibold', sans-serif; display: inline-flex; align-items: center; justify-content: center; font-weight: 700;">
+                    <span style="font-size: 1.1em; margin-right: 10px; line-height: 1;">📦</span>
+                    <span style="line-height: 1; color: #fff;">
+                        TOTAL BACKLOG:
+                        <span class="value" style="font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                            {{ total.TOTAL_BACKLOG_DISPLAY|default:"0" }} units
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Kontener TYLKO dla szczegółów 5 backlogów (TSI, NVF, PAX, MIX, SPECIAL) #}
+<div id="backlogDetailsContainer">
+    <div style="display: flex; gap: 16px; justify-content: center; margin: 0 auto 20px auto; max-width: 2640px; align-items: stretch; flex-wrap: wrap;">
+
+        {# ----------------------- PANEL TSI BACKLOG ----------------------- #}
+        <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+            <div class="glass-panel tsi-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="glass-panel-header panel-title-highlight">
+                    TSI TOTAL - {{ total.TSI_TOTAL_DISPLAY|default:"0" }}
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                     <table class="details-table glass-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Pallets</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-tsi">
+                            <tr>
+                                <td>TSI PAX</td>
+                                <td>{{ total.TSI_PAX_pallets|default:"0" }}</td>
+                                <td>{{ total.TSI_PAX_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>TSI MIX</td>
+                                <td>{{ total.TSI_MIX_SELLABLE_pallets|default:"0" }}</td>
+                                <td>{{ total.TSI_MIX_SELLABLE_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>WRO1 SELL</td>
+                                <td>{{ total.TSI_WRO1_SELL_pallets|default:"0" }}</td>
+                                <td>{{ total.TSI_WRO1_SELL_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>UNSELL</td>
+                                <td>{{ total.TSI_MIX_UNSELL_pallets|default:"0" }}</td>
+                                <td>{{ total.TSI_MIX_UNSELL_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {# ----------------------- KONIEC PANELU TSI BACKLOG ----------------------- #}
+
+        {# ----------------------- PANEL NVF BACKLOG ----------------------- #}
+        <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+            <div class="glass-panel nvf-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="glass-panel-header panel-title-highlight">
+                    NVF TOTAL - {{ total.NVF_TOTAL_DISPLAY|default:"0" }}
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <table class="details-table glass-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Pallets</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-nvf">
+                            <tr>
+                                <td>NVF PP</td>
+                                <td>{{ total.NVF_PP_pallets|default:"0" }}</td>
+                                <td>{{ total.NVF_PP_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>NVF MIX</td>
+                                <td>{{ total.NVF_MIX_pallets|default:"0" }}</td>
+                                <td>{{ total.NVF_MIX_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>OC</td>
+                                <td>-</td>
+                                <td>{{ total.NVF_OC_quantity|default:"0" }}</td>
+                            </tr>
+                             <tr>
+                                <td>SB</td>
+                                 <td>-</td>
+                                <td>{{ total.NVF_SB_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {# ----------------------- KONIEC PANELU NVF BACKLOG ----------------------- #}
+
+        {# ----------------------- PANEL PAX BACKLOG ----------------------- #}
+        <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+            <div class="glass-panel pax-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="glass-panel-header panel-title-highlight">
+                     PAX BACKLOG - {{ total.PAX_TOTAL_DISPLAY|default:"0" }}
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <table class="details-table glass-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>PLT/CNTR</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-pax">
+                            <tr>
+                                <td>NVF PAX</td>
+                                <td>{{ total.PAX_NVF_PP_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_NVF_PP_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>TSI PAX</td>
+                                <td>{{ total.PAX_TSI_PAX_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_TSI_PAX_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>SB PAX</td>
+                                <td>{{ total.PAX_FBA_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_FBA_quantity|default:"0" }}</td>
+                            </tr>
+                             <tr>
+                                <td>OC PAX</td>
+                                <td>{{ total.PAX_OC_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_OC_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>CC PAX</td>
+                                <td>{{ total.PAX_CC_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_CC_quantity|default:"0" }}</td>
+                            </tr>
+                            {# KARMA - NOWY WIERSZ #}
+                            <tr>
+                                <td>KARMA</td>
+                                <td>{{ total.PAX_KARMA_pallets|default:"0" }}</td>
+                                <td>{{ total.PAX_KARMA_quantity|default:"0" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {# ----------------------- KONIEC PANELU PAX BACKLOG ----------------------- #}
+
+        {# ----------------------- PANEL MIX BACKLOG ----------------------- #}
+        <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+            <div class="glass-panel mix-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+                 <div class="glass-panel-header panel-title-highlight">
+                    MIX BACKLOG - {{ total.MIX_TOTAL_DISPLAY|default:"0" }}
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                     <table class="details-table glass-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>PLT/CNTR</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-mix">
+                            <tr>
+                                <td>NVF MIX</td>
+                                <td>{{ total.MIX_BACKLOG_NVF_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_BACKLOG_NVF_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>TSI MIX</td>
+                                <td>{{ total.MIX_BACKLOG_TSI_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_BACKLOG_TSI_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>WRO1 SELL</td>
+                                <td>{{ total.MIX_WRO1_SELL_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_WRO1_SELL_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>UNSELL</td>
+                                <td>{{ total.MIX_UNSELL_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_UNSELL_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>SB MIX</td>
+                                <td>{{ total.MIX_FBA_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_FBA_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>OC MIX</td>
+                                <td>{{ total.MIX_OC_pallets|default:"0" }}</td>
+                                <td>{{ total.MIX_OC_quantity|default:"0" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {# ----------------------- KONIEC PANELU MIX BACKLOG ----------------------- #}
+
+        {# ----------------------- PANEL SPECIAL BACKLOG ----------------------- #}
+        <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+            <div class="glass-panel special-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="glass-panel-header panel-title-highlight">
+                    SPECIAL BACKLOG
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                     <table class="details-table glass-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Pallets</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-special">
+                            <tr>
+                                <td>TL</td>
+                                <td>{{ total.SPECIAL_TL_pallets|default:"0" }}</td>
+                                <td>{{ total.SPECIAL_TL_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>HV</td>
+                                 <td>{{ total.SPECIAL_HV_pallets|default:"0" }}</td>
+                                <td>{{ total.SPECIAL_HV_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>CAGE</td>
+                                 <td>{{ total.SPECIAL_CAGE_pallets|default:"0" }}</td>
+                                <td>{{ total.SPECIAL_CAGE_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>PREP</td>
+                                 <td>{{ total.SPECIAL_PREP_pallets|default:"0" }}</td>
+                                <td>{{ total.SPECIAL_PREP_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>OVERSIZE</td>
+                                 <td>{{ total.SPECIAL_OVERSIZE_pallets|default:"0" }}</td>
+                                <td>{{ total.SPECIAL_OVERSIZE_quantity|default:"0" }}</td>
+                            </tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {# ----------------------- KONIEC PANELU SPECIAL BACKLOG ----------------------- #}
+    </div>
+</div> {# Koniec kontenera backlogDetailsContainer #}
+
+
+{# --- NOWY PANEL: Unverified Backlog --- #}
+<div style="display: flex; align-items: stretch; justify-content: center; gap: 16px; margin: 0 auto 25px auto; max-width: 800px;" id="unverifiedBacklogContainer">
+    <div style="flex: 1; min-width: 420px; max-width: 800px; display: flex; flex-direction: column;">
+        <div class="glass-panel unverified-panel-styling" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="glass-panel-header panel-title-highlight">
+                UNVERIFIED BACKLOG (pax or mix) - {{ total.UNVERIFIED_TOTAL_DISPLAY|default:"0" }}
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                 <table class="details-table glass-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>PLT/CNTR</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-unverified">
+                        <tr>
+                            <td>SB</td>
+                            <td>{{ total.UNVERIFIED_SB_pallets|default:"0" }}</td>
+                            <td>{{ total.UNVERIFIED_SB_quantity|default:"0" }}</td>
+                        </tr>
+                        <tr>
+                            <td>CC</td>
+                            <td>{{ total.UNVERIFIED_CC_pallets|default:"0" }}</td>
+                            <td>{{ total.UNVERIFIED_CC_quantity|default:"0" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{# --- KONIEC NOWEGO PANELU --- #}
+
+
+{# ---  KONTENER DLA TRAILER TYPE I DOCK FULLNESS --- #}
+<div style="display: flex; align-items: stretch; justify-content: center; gap: 16px; margin: 0 auto 25px auto; max-width: 1620px;" id="trailerAndDockContainer">
+
+    {# PANEL TRAILER/CONTAINER TYPE #}
+    <div style="flex: 1; min-width: 420px; max-width: 800px;">
+        <div class="glass-panel">
+            <div class="glass-panel-header">TRAILER/CONTAINER TYPE</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; flex: 1; padding: 10px;">
+                <div class="glass-tile" style="border-left: 8px solid rgba(10, 140, 51, 0.7);">
+                    <div class="tile-title">FBA SB</div>
+                    <div class="tile-value">{{ total.SB_pallets_total|default:"0" }}</div>
+                </div>
+                <div class="glass-tile" style="border-left: 8px solid rgba(0, 139, 139, 0.7);">
+                    <div class="tile-title">OC</div>
+                    <div class="tile-value">{{ total.OC_count|default:"0" }}</div>
+                </div>
+                <div class="glass-tile" style="border-left: 8px solid rgba(51, 153, 255, 0.7);">
+                    <div class="tile-title">ATS</div>
+                    <div class="tile-value">{{ total.ATS_count|default:"0" }}</div>
+                </div>
+                <div class="glass-tile" style="border-left: 8px solid rgba(255, 200, 50, 0.7);">
+                    <div class="tile-title">CARRIER</div>
+                    <div class="tile-value">{{ total.CARRIER_count|default:"0" }}</div>
+                </div>
+                <div class="glass-tile" style="border-left: 8px solid rgba(102, 204, 255, 0.7);">
+                    <div class="tile-title">ROTOM</div>
+                    <div class="tile-value">{{ total.ROTOM_count|default:"0" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# --- PANEL DOCK FULLNESS --- #}
+    <div style="flex: 1; min-width: 420px; max-width: 800px;">
+        <div class="glass-panel">
+            <div class="glass-panel-header">DOCK FULLNESS</div>
+            <div style="text-align:center; color:#fff; font-size: 26px; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                 <span id="dock-fullness-value">0</span> / 800 PALLETS <span id="dock-fullness-percentage" style="color: #b0b0c0;">(0%)</span>
+            </div>
+            <div class="progress-bar-container" style="margin-bottom: 43.5px;">
+                <div class="progress-bar" id="dock-fullness-bar" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+    {# --- KONIEC PANELU DOCK FULLNESS --- #}
+</div>
+
+{# Przycisk do przełączania widoczności backlogu - PRZENIESIONY TUTAJ #}
+<div style="text-align: center; margin-bottom: 20px;">
+    <button id="toggleBacklogButton" class="toggle-backlog-button">Hide Details</button>
+</div>
+
+
+{# Kontener dla przycisków, wyszukiwarki i filtrów #}
+<div class="controls-container glass-panel" style="padding: 15px 20px;">
+  <div class="controls-left">
+    <button id="quickAddBtn" class="quick-add-button">
+      ⚡ QUICK ADD
+    </button>
+    <button onclick="window.location.href='{% url 'add_stock' %}'" class="add-stock-button">
+      ADD NEW STOCK
+    </button>
+  </div>
+  <div class="filter-container">
+    <input type="text" id="searchInput" placeholder="Search..." class="search-input">
+    <button id="filter-toggle-button">Filters ▼</button>
+    <div id="filter-options" class="filter-options glass-filter-options hidden">
+      <div class="filter-section filter-mode-section">
+        <strong>Filter Mode:</strong>
+        <label><input type="radio" name="filterMode" class="filter-mode-radio" value="show" checked> Show Matches</label>
+        <label><input type="radio" name="filterMode" class="filter-mode-radio" value="hide"> Hide Matches</label>
+      </div>
+      <div class="filter-section">
+        <strong>Location (Line/ID):</strong>
+        <label><input type="checkbox" class="filter-checkbox" value="yard"> Yard (Purple)</label>
+        <label><input type="checkbox" class="filter-checkbox" value="dock"> Dock (Orange)</label>
+        <label><input type="checkbox" class="filter-checkbox" value="gates"> Gates (Blue)</label>
+      </div>
+      <div class="filter-section">
+        <strong>Product Type:</strong>
+        <label><input type="checkbox" class="filter-checkbox" value="nvf_pp"> NVF PP</label>
+        <label><input type="checkbox" class="filter-checkbox" value="nvf_mix"> NVF MIX</label>
+        <label><input type="checkbox" class="filter-checkbox" value="fba_sb"> FBA SB</label>
+        <label><input type="checkbox" class="filter-checkbox" value="tsi_pax"> TSI PAX</label>
+        <label><input type="checkbox" class="filter-checkbox" value="tsi_mix"> TSI MIX</label>
+      </div>
+      <div class="filter-section">
+        <strong>TRAILER/CONTAINER type:</strong>
+        <label><input type="checkbox" class="filter-checkbox" value="oc"> OC</label>
+        <label><input type="checkbox" class="filter-checkbox" value="rotom"> ROTOM</label>
+        <label><input type="checkbox" class="filter-checkbox" value="ats"> ATS</label>
+        <label><input type="checkbox" class="filter-checkbox" value="carrier"> CARRIER</label>
+      </div>
+      <div class="filter-section">
+        <strong>Tags:</strong>
+        <label><input type="checkbox" class="filter-checkbox" value="mix"> MIX</label>
+        <label><input type="checkbox" class="filter-checkbox" value="pax"> PAX</label>
+        <label><input type="checkbox" class="filter-checkbox" value="ll_pax"> LL PAX</label>
+        <label><input type="checkbox" class="filter-checkbox" value="unsell"> UNSELL</label>
+        <label><input type="checkbox" class="filter-checkbox" value="wro1_sell"> WRO1 SELL</label>
+        <label><input type="checkbox" class="filter-checkbox" value="tl"> TL</label>
+        <label><input type="checkbox" class="filter-checkbox" value="hv"> HV</label>
+        <label><input type="checkbox" class="filter-checkbox" value="cage"> CAGE</label>
+        <label><input type="checkbox" class="filter-checkbox" value="prep"> PREP</label>
+        <label><input type="checkbox" class="filter-checkbox" value="oversize"> OVERSIZE</label>
+        <label><input type="checkbox" class="filter-checkbox" value="do_przebudowy"> DO PRZEBUDOWY</label>
+        <label><input type="checkbox" class="filter-checkbox" value="do_streczowania"> DO STRECZOWANIA</label>
+        <label><input type="checkbox" class="filter-checkbox" value="double_stack"> DOUBLE STACK</label>
+        <label><input type="checkbox" class="filter-checkbox" value="do_sprawdzenia"> DO SPRAWDZENIA</label>
+        <label><input type="checkbox" class="filter-checkbox" value="karma"> KARMA</label>
+        <label><input type="checkbox" class="filter-checkbox" value="deutp"> DEUTP</label>
+        <label><input type="checkbox" class="filter-checkbox" value="slamd"> SLAMD</label>
+        <label><input type="checkbox" class="filter-checkbox" value="d2d"> D2D</label>
+      </div>
+      <button id="reset-filters-button" class="reset-filters-active">Reset Filters</button>
+    </div>
+  </div>
+</div>
+
+{# Okno modalne Quick Add #}
+<div id="quickAddModal" class="modal">
+  <div class="modal-content glass-modal-content">
+    <span class="close-button">&times;</span>
+    <h2>⚡ Quick Add (SB Only)</h2>
+    <div class="modal-form-group">
+      <label for="quickAddIsa">ISA Number:</label>
+      <input type="number" id="quickAddIsa" name="quickAddIsa" required>
+    </div>
+    <div class="modal-form-group">
+        <label for="quickAddLine">LINE/ID:</label>
+        <input type="text" id="quickAddLine" name="quickAddLine" list="line-options-modal" required>
+        <datalist id="line-options-modal">
+            {% for i in range_102_123 %}
+            <option value="IB {{ i }}">
+            {% endfor %}
+            {% for i in range_01_28 %}
+            <option value="DOCK {% if i < 10 %}0{% endif %}{{ i }}">
+            {% endfor %}
+            <option value="QUICKADD">
+          </datalist>
+    </div>
+    <div class="modal-form-group">
+      <label for="quickAddDateTime">SBD/SLA:</label>
+      <input type="datetime-local" id="quickAddDateTime" name="quickAddDateTime" required>
+    </div>
+    <div class="modal-form-group">
+      <label for="quickAddTag">Tag:</label>
+      <select id="quickAddTag" name="quickAddTag">
+        <option value="">-- Select Tag --</option>
+        {# Opcje tagów zostaną dodane przez JavaScript #}
+      </select>
+    </div>
+    <div class="modal-form-group">
+      <label for="quickAddOperator">Operator:</label>
+      <select id="quickAddOperator" name="quickAddOperator">
+        <option value="" selected>-- Select Operator --</option>
+        <option value="DEUTP">DEUTP</option>
+        <option value="SLAMD">SLAMD</option>
+      </select>
+    </div>
+    <div class="modal-buttons">
+        <button id="quickAddSubmit" class="modal-button submit">Add Stock</button>
+        <button id="quickAddCancel" class="modal-button cancel" type="button">Cancel</button>
+    </div>
+    <div id="quickAddMessage" class="modal-message"></div> {# Miejsce na komunikaty #}
+  </div>
+</div>
+
+<div class="main-table-container">
+    <table class="table glass-table" id="stock">
+      <thead>
+        <tr>
+          <th>No.</th> <th onclick=sortTable(1)>ISA</th>
+          <th onclick=sortTable(2)>SBD/SLA</th>
+          <th onclick=sortTable(3)>LINE/ID</th>
+          <th class="data-group-header styled-th th-nvf-pp">NVF PP</th>
+          <th class="data-group-header styled-th th-pp-qty">PP QTY</th>
+          <th class="data-group-header styled-th th-nvf-mix">NVF MIX</th>
+          <th class="data-group-header styled-th th-mix-qty-nvf">MIX QTY</th>
+          <th class="data-group-header styled-th th-fba-sb">FBA SB</th>
+          <th class="data-group-header styled-th th-sb-qty">SB QTY</th>
+          <th class="data-group-header styled-th th-tsi-pax">TSI PAX</th>
+          <th class="data-group-header styled-th th-pax-qty">PAX QTY</th>
+          <th class="data-group-header styled-th th-tsi-mix">TSI MIX</th>
+          <th class="data-group-header styled-th th-mix-qty-tsi">MIX QTY</th>
+          <th>COMMENT</th>
+          <th>REASON FOR DELAY</th>
+          <th>ADDED BY</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for row in table_rows %}
+          {{ row|safe }}
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{# Potrzebujemy CSRF token dla żądania POST z JavaScript #}
+{% csrf_token %}
+
+<script>
+// --- Sorting Logic ---
+function sortTable(columnIndex) {
+  const table = document.querySelector('.table');
+  const tbody = table.getElementsByTagName('tbody')[0];
+  const rows = Array.from(tbody.getElementsByTagName('tr'));
+  const jsIndex = columnIndex;
+
+  const isNumeric = rows.every(row => {
+    const cellValue = row.getElementsByTagName('td')[jsIndex]?.innerText || '';
+    return cellValue === '' || (!isNaN(parseFloat(cellValue)) && isFinite(cellValue));
+  });
+
+  rows.sort((a, b) => {
+    let aValue = a.getElementsByTagName('td')[jsIndex]?.innerText || '';
+    let bValue = b.getElementsByTagName('td')[jsIndex]?.innerText || '';
+
+    if (jsIndex === 2) { // SBD/SLA column
+      const parseDateTime = (dateTimeStr) => {
+        if (!dateTimeStr || dateTimeStr === 'N/A') return null;
+        const parts = dateTimeStr.split(' ');
+        if (parts.length !== 2) return null;
+        const dateParts = parts[0].split('-');
+        const timeParts = parts[1].split(':');
+        if (dateParts.length !== 3 || timeParts.length !== 2) return null;
+        // Assuming YYYY-MM-DD HH:MM format
+        const dateObj = new Date(
+            parseInt(dateParts[0], 10),
+            parseInt(dateParts[1], 10) - 1, // Month is 0-indexed
+            parseInt(dateParts[2], 10),
+            parseInt(timeParts[0], 10),
+            parseInt(timeParts[1], 10)
+        );
+        return isNaN(dateObj) ? null : dateObj;
+      };
+      const dateA = parseDateTime(aValue);
+      const dateB = parseDateTime(bValue);
+      if (dateA === null && dateB === null) return 0;
+      if (dateA === null) return -1; // Nulls/N/A sort to one end
+      if (dateB === null) return 1;
+      return dateA - dateB;
+    }
+    else if (isNumeric) {
+      aValue = aValue === '' || aValue === '-' ? -Infinity : parseFloat(aValue); // Handle empty/'-' as smallest
+      bValue = bValue === '' || bValue === '-' ? -Infinity : parseFloat(bValue);
+      if (isNaN(aValue)) aValue = -Infinity; // Treat non-numeric as smallest in numeric sort
+      if (isNaN(bValue)) bValue = -Infinity;
+      return aValue - bValue;
+    } else { // Non-numeric (string) sort
+      aValue = aValue.toLowerCase();
+      bValue = bValue.toLowerCase();
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
+      return 0;
+    }
+  });
+
+  const headerCell = table.getElementsByTagName('th')[columnIndex];
+  const isSortedAsc = headerCell.classList.contains('asc');
+
+  // Clear asc/desc from all headers
+  const headerCells = Array.from(table.getElementsByTagName('th'));
+  headerCells.forEach(cell => {
+      cell.classList.remove('asc', 'desc');
+  });
+
+  if (isSortedAsc) {
+    rows.reverse(); // If it was ascending, now descending
+    headerCell.classList.add('desc');
+  } else {
+    headerCell.classList.add('asc'); // Default to ascending
+  }
+
+  // Re-append sorted rows
+  while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+  rows.forEach(row => tbody.appendChild(row));
+
+  applyStylesAfterSort();
+  applyFilters(); // Re-apply filters as sorting might change visibility if filters depend on content
+}
+
+function applyStylesAfterSort() {
+    applyConditionalCellColors();
+    applyLineColumnStyles();
+    highlightNearDates();
+    attachHoverListeners();
+    tagHighlight();
+    applyBacklogIndicatorStyles();
+}
+
+function applyBacklogIndicatorStyles() {
+    const detailTables = document.querySelectorAll('.details-table');
+    detailTables.forEach(table => {
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const typeCell = row.cells[0];
+            if (typeCell) {
+                const cellContent = typeCell.textContent.trim();
+                if (cellContent && cellContent !== '&nbsp;') {
+                    typeCell.classList.remove('indicator-hidden');
+                } else {
+                    typeCell.classList.add('indicator-hidden');
+                }
+            }
+        });
+    });
+}
+
+function highlightNearDates() {
+  const now = new Date();
+  const rows = document.querySelectorAll('#stock tbody tr');
+
+  rows.forEach(row => {
+    const dateCell = row.cells[2]; // SBD/SLA column
+    if (!dateCell) return;
+    const dateText = dateCell.textContent.trim();
+
+    // Clear previous dynamic styles if not hovering
+    if (!row.classList.contains('row-hover')) {
+        dateCell.style.backgroundColor = '';
+        dateCell.style.color = '';
+        dateCell.style.border = '';
+    }
+
+    if (!dateText.includes('*')) { // Assuming '*' indicates manual input to skip highlighting
+      const parseDateTime = (dateTimeStr) => {
+        if (!dateTimeStr || dateTimeStr === 'N/A') return null;
+        const parts = dateTimeStr.split(' ');
+        if (parts.length !== 2) return null;
+        const dateParts = parts[0].split('-');
+        const timeParts = parts[1].split(':');
+        if (dateParts.length !== 3 || timeParts.length !== 2) return null;
+        const dateObj = new Date(
+            parseInt(dateParts[0], 10), parseInt(dateParts[1], 10) - 1, parseInt(dateParts[2], 10),
+            parseInt(timeParts[0], 10), parseInt(timeParts[1], 10)
+        );
+        return isNaN(dateObj) ? null : dateObj;
+      };
+      const rowDate = parseDateTime(dateText);
+
+      if (rowDate) {
+          const diffHours = (rowDate - now) / (1000 * 60 * 60);
+          if (!row.classList.contains('row-hover')) { // Apply color only if not hovered
+              if (diffHours < 0) { // Overdue
+                dateCell.style.backgroundColor = '#bf0606'; // Darker Red
+                dateCell.style.color = 'white';
+                dateCell.style.border = '2px solid black';
+              } else if (diffHours <= 6) { // Nearing (e.g., 6 hours)
+                dateCell.style.backgroundColor = '#9e9219'; // Darker Yellow/Mustard
+                dateCell.style.color = 'white';
+                dateCell.style.border = '2px solid black';
+              }
+          }
+      }
+    }
+  });
+}
+
+
+function applyConditionalCellColors() {
+  const columnColors = {
+    4: 'rgba(96, 71, 56, 0.85)',   // NVF PP
+    5: 'rgba(99, 89, 83, 0.85)',   // PP QTY
+    6: 'rgba(100, 96, 62, 0.85)',  // NVF MIX
+    7: 'rgba(105, 102, 82, 0.851)',  // MIX QTY
+    8: 'rgba(59, 100, 72, 0.85)',  // FBA SB
+    9: 'rgba(73, 101, 82, 0.85)',  // SB QTY
+    10: 'rgba(62, 74, 102, 0.85)', // TSI PAX
+    11: 'rgba(73, 81, 100, 0.85)', // PAX QTY
+    12: 'rgba(81, 72, 97, 0.85)',  // TSI MIX
+    13: 'rgba(89, 83, 98, 0.85)'   // MIX QTY (po TSI MIX)
+  };
+
+  const rows = document.querySelectorAll('#stock tbody tr');
+  rows.forEach(row => {
+    Object.entries(columnColors).forEach(([colIndexStr, color]) => {
+      const colIndex = parseInt(colIndexStr);
+      const cell = row.cells[colIndex];
+      if (cell) {
+        const content = cell.textContent.trim();
+        cell.style.backgroundColor = ''; // Always clear previous inline style first
+        cell.style.boxShadow = '';
+
+        if (content && content !== '-' && content !== '') {
+            cell.style.backgroundColor = color;
+            cell.style.boxShadow = 'inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15)';
+			cell.style.borderRadius = '4px';
+        } else {
+            // Apply alternating gray for empty cells in this specific range
+            const parentRow = cell.closest('tr');
+            const cellIndex = cell.cellIndex; // Already have colIndex, but this is fine
+            // Only apply special alternating gray for the specified column range (NVF PP to MIX QTY, indices 4 to 13)
+            if (colIndex >= 4 && colIndex <= 13) {
+                if (parentRow && Array.from(parentRow.parentNode.children).indexOf(parentRow) % 2 === 0) { // Even row (0-indexed based on parentNode.children)
+                     cell.style.backgroundColor = 'rgba(60, 63, 69, 0.6)'; // Gray for even row empty cell in range
+                } else { // Odd row
+                     cell.style.backgroundColor = 'rgba(50, 53, 59, 0.6)'; // Gray for odd row empty cell in range
+                }
+				cell.style.borderRadius = '4px';
+            } else {
+                // For other columns that are empty, use a default empty cell gray
+                cell.style.backgroundColor = 'rgba(55, 58, 64, 0.8)';
+            }
+            cell.style.boxShadow = 'inset 0 0 3px rgba(0,0,0,0.1)';
+        }
+      }
+    });
+  });
+}
+
+function applyLineColumnStyles() {
+  const rows = document.querySelectorAll('#stock tbody tr');
+  rows.forEach(row => {
+    const lineCell = row.cells[3]; // LINE/ID column
+    if (!lineCell) return;
+    const lineText = lineCell.textContent.toUpperCase();
+    lineCell.classList.remove('line-dock', 'line-ib', 'line-default');
+    if (lineText.includes('DOCK')) { lineCell.classList.add('line-dock'); }
+    else if (lineText.includes('IB') || lineText.includes('GATE')) { lineCell.classList.add('line-ib'); }
+    else { lineCell.classList.add('line-default'); }
+  });
+}
+
+function attachHoverListeners() {
+    const rows = document.querySelectorAll('#stock tbody tr');
+    rows.forEach((row) => {
+        row.removeEventListener('mouseenter', handleMouseEnter);
+        row.removeEventListener('mouseleave', handleMouseLeave);
+        row.addEventListener('mouseenter', handleMouseEnter);
+        row.addEventListener('mouseleave', handleMouseLeave);
+    });
+}
+
+function handleMouseEnter(event) {
+    event.currentTarget.classList.add('row-hover');
+    // highlightNearDates(); // No longer needed here if hover CSS is robust
+}
+
+function handleMouseLeave(event) {
+    event.currentTarget.classList.remove('row-hover');
+    highlightNearDates(); // Re-apply base date colors when not hovering
+}
+
+
+function tagHighlight() {
+    const contentArea = document.querySelector('.table tbody');
+    if (!contentArea) return;
+
+    contentArea.querySelectorAll('tr').forEach(tr => {
+        const td = tr.cells[14]; // COMMENT column index
+        if (!td) return;
+        if (td.dataset.tagsHighlighted === 'true' && !td.innerHTML.includes('#')) return;
+
+        let textContent = td.innerHTML;
+        if (textContent.includes('#') && !textContent.includes('<span class="')) {
+            const tagRegex = /(#(?:[A-Z0-9_]+(?: [A-Z0-9_]+)*)#)/gi;
+            let newHtml = td.innerHTML.replace(tagRegex, (match) => {
+                const cleanedTagForClass = match.replace(/#/g, '').replace(/\s+/g, '_').toLowerCase();
+                const tagText = match.replace(/#/g, '');
+                const tagClass = `${cleanedTagForClass}-highlight`;
+                return `<span class="${tagClass} tag-highlight">${tagText}</span>`;
+            });
+            if (td.innerHTML !== newHtml) { td.innerHTML = newHtml; }
+        }
+        td.dataset.tagsHighlighted = 'true';
+    });
+}
+
+
+const filterToggleButton = document.getElementById('filter-toggle-button');
+const filterOptionsDiv = document.getElementById('filter-options');
+const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+const filterModeRadios = document.querySelectorAll('.filter-mode-radio');
+const tableRows = document.querySelectorAll('#stock tbody tr');
+const resetFiltersButton = document.getElementById('reset-filters-button');
+const filtersLocalStorageKey = 'nyrStockFilters_v12'; // Incremented version for new structure
+const searchInput = document.getElementById('searchInput');
+
+const locationValues = ['yard', 'dock', 'gates'];
+const productValues = ['nvf_pp', 'nvf_mix', 'fba_sb', 'tsi_pax', 'tsi_mix'];
+const tagValues = ['oc', 'rotom', 'ats', 'carrier', 'mix', 'pax', 'll_pax', 'unsell', 'wro1_sell', 'tl', 'hv', 'cage', 'prep', 'oversize', 'do_przebudowy', 'do_streczowania', 'double_stack', 'do_sprawdzenia', 'karma', 'deutp', 'slamd', 'd2d'];
+
+
+function saveFiltersToLocalStorage() {
+    const activeFilters = { location: [], product: [], tag: [], mode: 'show' };
+    filterCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const value = checkbox.value;
+            if (locationValues.includes(value)) { activeFilters.location.push(value); }
+            else if (productValues.includes(value)) { activeFilters.product.push(value); }
+            else if (tagValues.includes(value)) { activeFilters.tag.push(value); }
+        }
+    });
+    filterModeRadios.forEach(radio => {
+        if (radio.checked) {
+            activeFilters.mode = radio.value;
+        }
+    });
+    localStorage.setItem(filtersLocalStorageKey, JSON.stringify(activeFilters));
+}
+
+
+function loadFiltersFromLocalStorage() {
+    const savedFiltersJSON = localStorage.getItem(filtersLocalStorageKey);
+    filterCheckboxes.forEach(checkbox => checkbox.checked = false);
+    // Default filter mode to 'show'
+    document.querySelector('.filter-mode-radio[value="show"]').checked = true;
+
+
+    if (savedFiltersJSON) {
+        try {
+            const savedFilters = JSON.parse(savedFiltersJSON);
+            const allSavedValues = [].concat(savedFilters.location || [], savedFilters.product || [], savedFilters.tag || []);
+            allSavedValues.forEach(filterValue => {
+                const checkbox = document.querySelector(`.filter-checkbox[value="${filterValue}"]`);
+                if (checkbox) { checkbox.checked = true; }
+            });
+            if (savedFilters.mode) {
+                const modeRadio = document.querySelector(`.filter-mode-radio[value="${savedFilters.mode}"]`);
+                if (modeRadio) { modeRadio.checked = true; }
+            }
+        } catch (e) {
+            console.error("Error parsing filters from localStorage", e);
+            localStorage.removeItem(filtersLocalStorageKey);
+        }
+    }
+    if (!filterOptionsDiv.classList.contains('toggled-visible')) {
+        filterOptionsDiv.classList.add('hidden');
+        filterToggleButton.textContent = 'Filters ▼';
+    } else {
+        filterOptionsDiv.classList.remove('hidden');
+        filterToggleButton.textContent = 'Filters ▲';
+    }
+    applyFilters();
+}
+
+
+filterToggleButton.addEventListener('click', () => {
+    filterOptionsDiv.classList.toggle('hidden');
+    if (filterOptionsDiv.classList.contains('hidden')) {
+        filterToggleButton.textContent = 'Filters ▼';
+        filterOptionsDiv.classList.remove('toggled-visible');
+    } else {
+        filterToggleButton.textContent = 'Filters ▲';
+        filterOptionsDiv.classList.add('toggled-visible');
+    }
+});
+filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
+filterModeRadios.forEach(radio => radio.addEventListener('change', applyFilters));
+
+resetFiltersButton.addEventListener('click', () => {
+    filterCheckboxes.forEach(checkbox => checkbox.checked = false);
+    document.querySelector('.filter-mode-radio[value="show"]').checked = true; // Reset mode to show
+    searchInput.value = '';
+    localStorage.removeItem(filtersLocalStorageKey);
+    applyFilters();
+    if (!filterOptionsDiv.classList.contains('hidden')) {
+      filterOptionsDiv.classList.add('hidden');
+      filterToggleButton.textContent = 'Filters ▼';
+      filterOptionsDiv.classList.remove('toggled-visible');
+    }
+});
+searchInput.addEventListener('input', applyFilters);
+
+
+function applyFilters() {
+    const activeFilters = { location: [], product: [], tag: [] };
+    let currentFilterMode = 'show';
+    filterModeRadios.forEach(radio => {
+        if (radio.checked) { currentFilterMode = radio.value; }
+    });
+
+    filterCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const value = checkbox.value;
+            if (locationValues.includes(value)) { activeFilters.location.push(value); }
+            else if (productValues.includes(value)) { activeFilters.product.push(value); }
+            else if (tagValues.includes(value)) { activeFilters.tag.push(value); }
+        }
+    });
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    tableRows.forEach((row, index) => {
+        let isLocationMatch = activeFilters.location.length === 0;
+        let isProductMatch = activeFilters.product.length === 0;
+        let isTagMatch = activeFilters.tag.length === 0;
+        let isTextMatch = searchTerm === '';
+
+        const lineCell = row.cells[3];
+        const commentCell = row.cells[14];
+        const rowTextContent = row.textContent.toLowerCase();
+
+        if (activeFilters.location.length > 0 && lineCell) {
+            for (const loc of activeFilters.location) {
+                if ((loc === 'yard' && lineCell.classList.contains('line-default')) ||
+                    (loc === 'dock' && lineCell.classList.contains('line-dock')) ||
+                    (loc === 'gates' && lineCell.classList.contains('line-ib'))) {
+                    isLocationMatch = true; break;
+                }
+            }
+        }
+
+        if (activeFilters.product.length > 0) {
+             for (const prod of activeFilters.product) {
+                let cellIndex = -1;
+                if (prod === 'nvf_pp') cellIndex = 4;
+                else if (prod === 'nvf_mix') cellIndex = 6;
+                else if (prod === 'fba_sb') cellIndex = 8;
+                else if (prod === 'tsi_pax') cellIndex = 10;
+                else if (prod === 'tsi_mix') cellIndex = 12;
+
+                const cell = row.cells[cellIndex];
+                const cellContent = cell ? cell.textContent.trim() : '';
+                if (cellContent && cellContent !== '-' && cellContent !== '') {
+                    isProductMatch = true; break;
+                }
+            }
+        }
+
+        if (activeFilters.tag.length > 0 && commentCell) {
+             for (const tag of activeFilters.tag) {
+                 const highlightClass = `${tag.replace(/\s+/g, '_').toLowerCase()}-highlight`;
+                 if (commentCell.querySelector(`span.${highlightClass}`)) {
+                     isTagMatch = true; break;
+                 }
+             }
+        }
+
+        if (searchTerm !== '') { isTextMatch = rowTextContent.includes(searchTerm); }
+
+        let showRow;
+        if (currentFilterMode === 'show') {
+            showRow = isLocationMatch && isProductMatch && isTagMatch && isTextMatch;
+        } else { // currentFilterMode === 'hide'
+            let matchesAnyFilter = false;
+            if (activeFilters.location.length > 0 && isLocationMatch) matchesAnyFilter = true;
+            if (activeFilters.product.length > 0 && isProductMatch && !matchesAnyFilter) matchesAnyFilter = true;
+            if (activeFilters.tag.length > 0 && isTagMatch && !matchesAnyFilter) matchesAnyFilter = true;
+
+            // If any filter type is active, "matchesAnyFilter" determines if it matched.
+            // If no filters of a certain type are active, that type cannot cause a "match".
+            const hasActiveFilterCategory = activeFilters.location.length > 0 || activeFilters.product.length > 0 || activeFilters.tag.length > 0;
+
+            if (hasActiveFilterCategory) {
+                showRow = !matchesAnyFilter && isTextMatch;
+            } else { // No filters active, so hide mode doesn't hide anything based on filters
+                showRow = isTextMatch;
+            }
+        }
+        row.style.display = showRow ? '' : 'none';
+    });
+    updateDockFullness();
+    saveFiltersToLocalStorage();
+}
+
+
+const toggleButton = document.getElementById('toggleBacklogButton');
+const backlogDetailsContainer = document.getElementById('backlogDetailsContainer');
+const unverifiedBacklogContainer = document.getElementById('unverifiedBacklogContainer'); // Nowy kontener
+const trailerAndDockContainer = document.getElementById('trailerAndDockContainer');
+const backlogVisibilityKey = 'nyrStockBacklogVisible_v5';
+
+function setBacklogVisibility(isVisible) {
+    if (isVisible) {
+        backlogDetailsContainer.style.display = '';
+        if (unverifiedBacklogContainer) unverifiedBacklogContainer.style.display = 'flex'; // Pokaż nowy panel
+        if (trailerAndDockContainer) trailerAndDockContainer.style.display = 'flex'; /* Ensure it's flex for side-by-side */
+        toggleButton.textContent = 'Hide Details';
+        localStorage.setItem(backlogVisibilityKey, 'visible');
+    } else {
+        backlogDetailsContainer.style.display = 'none';
+        if (unverifiedBacklogContainer) unverifiedBacklogContainer.style.display = 'none'; // Ukryj nowy panel
+        if (trailerAndDockContainer) trailerAndDockContainer.style.display = 'none';
+        toggleButton.textContent = 'Show Details';
+        localStorage.setItem(backlogVisibilityKey, 'hidden');
+    }
+}
+
+toggleButton.addEventListener('click', () => {
+    const isCurrentlyVisible = window.getComputedStyle(backlogDetailsContainer).display !== 'none';
+    setBacklogVisibility(!isCurrentlyVisible);
+});
+
+function loadBacklogVisibility() {
+    const savedState = localStorage.getItem(backlogVisibilityKey);
+    const shouldBeVisible = savedState === null || savedState === 'visible';
+    setBacklogVisibility(shouldBeVisible);
+
+    if (!shouldBeVisible) {
+        backlogDetailsContainer.style.display = 'none';
+        if (unverifiedBacklogContainer) unverifiedBacklogContainer.style.display = 'none';
+        if (trailerAndDockContainer) trailerAndDockContainer.style.display = 'none';
+    } else {
+        backlogDetailsContainer.style.display = ''; // Or 'flex' if it's a flex container itself
+        if (unverifiedBacklogContainer) unverifiedBacklogContainer.style.display = 'flex';
+        if (trailerAndDockContainer) trailerAndDockContainer.style.display = 'flex'; /* Ensure it's flex for side-by-side */
+    }
+}
+
+
+function updateDockFullness() {
+    const maxDockPallets = 800;
+    let currentDockPallets = 0;
+    const allTableRows = document.querySelectorAll('#stock tbody tr');
+
+    allTableRows.forEach(row => {
+        if (row.style.display === 'none') return;
+
+        const lineCell = row.cells[3];
+        if (lineCell && lineCell.textContent.toUpperCase().includes('DOCK')) {
+            const nvfPpPallets = parseInt(row.cells[4]?.textContent.replace(/[^0-9]/g, '')) || 0;
+            const nvfMixPallets = parseInt(row.cells[6]?.textContent.replace(/[^0-9]/g, '')) || 0;
+            const sbPallets = parseInt(row.cells[8]?.textContent.replace(/[^0-9]/g, '')) || 0;
+            const tsiPaxPallets = parseInt(row.cells[10]?.textContent.replace(/[^0-9]/g, '')) || 0;
+            const tsiMixPPallets = parseInt(row.cells[12]?.textContent.replace(/[^0-9]/g, '')) || 0;
+            currentDockPallets += nvfPpPallets + nvfMixPallets + tsiPaxPallets + tsiMixPPallets + sbPallets;
+        }
+    });
+
+    const valueSpan = document.getElementById('dock-fullness-value');
+    if (valueSpan) valueSpan.textContent = currentDockPallets;
+
+    const percentage = maxDockPallets > 0 ? Math.min((currentDockPallets / maxDockPallets) * 100, 100) : 0;
+    const percentageSpan = document.getElementById('dock-fullness-percentage');
+    if (percentageSpan) percentageSpan.textContent = `(${percentage.toFixed(1)}%)`;
+
+    const progressBar = document.getElementById('dock-fullness-bar');
+    if (progressBar) {
+        progressBar.style.width = `${percentage}%`;
+        if (percentage > 85) { progressBar.style.backgroundColor = '#e74c3c'; }
+        else if (percentage > 60) { progressBar.style.backgroundColor = '#f39c12'; }
+        else { progressBar.style.backgroundColor = '#2ecc71'; }
+    }
+}
+
+
+const quickAddModal = document.getElementById('quickAddModal');
+const quickAddBtn = document.getElementById('quickAddBtn');
+const closeButton = quickAddModal.querySelector('.close-button');
+const quickAddSubmitBtn = document.getElementById('quickAddSubmit');
+const quickAddCancelBtn = document.getElementById('quickAddCancel');
+const quickAddIsaInput = document.getElementById('quickAddIsa');
+const quickAddLineInput = document.getElementById('quickAddLine');
+const quickAddDateTimeInput = document.getElementById('quickAddDateTime');
+const quickAddTagSelect = document.getElementById('quickAddTag');
+const quickAddOperatorSelect = document.getElementById('quickAddOperator');
+const quickAddMessageDiv = document.getElementById('quickAddMessage');
+const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+const quickAddTags = ['OC', 'ROTOM', 'ATS', 'CARRIER','MIX', 'PAX', 'LL PAX', 'UNSELL', 'WRO1_SELL', 'TL', 'HV', 'CAGE', 'PREP', 'OVERSIZE','DO PRZEBUDOWY', 'DO STRECZOWANIA', 'DOUBLE STACK', 'DO SPRAWDZENIA', 'KARMA', 'D2D'];
+
+
+function populateQuickAddTags() {
+    quickAddTagSelect.innerHTML = '<option value="">-- No Tag --</option>';
+    let defaultTagValue = '';
+    quickAddTags.forEach(tag => {
+        const option = document.createElement('option');
+        const tagValueWithHash = `#${tag}#`;
+        option.value = tagValueWithHash;
+        option.textContent = tag;
+        quickAddTagSelect.appendChild(option);
+        if (tag === 'DO SPRAWDZENIA') { defaultTagValue = tagValueWithHash; }
+    });
+    if (defaultTagValue) { quickAddTagSelect.value = defaultTagValue; }
+}
+
+function setDefaultDateTime() {
+    const dateForFuture = new Date(); // Get current date and time
+
+    // Add 2 days to the current date
+    dateForFuture.setDate(dateForFuture.getDate() + 2);
+
+    const year = dateForFuture.getFullYear();
+    const month = (dateForFuture.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is 0-indexed
+    const day = dateForFuture.getDate().toString().padStart(2, '0');
+
+    // For the time part, use the *actual current* local time
+    const currentTime = new Date(); // Get a fresh Date object for the current time
+    const hours = currentTime.getHours().toString().padStart(2, '0');
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+
+    // Format for datetime-local input: YYYY-MM-DDTHH:mm
+    const dateTimeLocalString = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    quickAddDateTimeInput.value = dateTimeLocalString;
+}
+
+quickAddBtn.onclick = function() {
+    quickAddModal.style.display = 'block';
+    quickAddMessageDiv.textContent = '';
+    quickAddMessageDiv.className = 'modal-message';
+    populateQuickAddTags();
+    setDefaultDateTime(); // This will now set date +2 days and current time
+    quickAddIsaInput.value = '';
+    quickAddLineInput.value = '';
+    quickAddOperatorSelect.value = ''; // Reset operator dropdown
+    quickAddIsaInput.focus();
+}
+
+closeButton.onclick = function() { quickAddModal.style.display = 'none'; }
+quickAddCancelBtn.onclick = function() { quickAddModal.style.display = 'none'; }
+window.onclick = function(event) {
+    if (event.target == quickAddModal) { quickAddModal.style.display = 'none'; }
+}
+
+quickAddSubmitBtn.onclick = async function() {
+    const isa = quickAddIsaInput.value;
+    const line = quickAddLineInput.value;
+    const dateTime = quickAddDateTimeInput.value;
+    let comment = quickAddTagSelect.value; // Get base tag
+    const operator = quickAddOperatorSelect.value; // Get operator
+
+    if (!isa || !line || !dateTime) {
+        quickAddMessageDiv.textContent = 'ISA, LINE/ID and Date/Time are required!';
+        quickAddMessageDiv.className = 'modal-message error';
+        return;
+    }
+
+    // Append operator tag if selected
+    if (operator) {
+        comment += ` #${operator}#`;
+    }
+
+    const dataToSend = {
+        isa: isa,
+        line: line,
+        start_time: dateTime,
+        comment: comment.trim() // Use the potentially modified comment string
+    };
+
+    quickAddMessageDiv.textContent = 'Adding...';
+    quickAddMessageDiv.className = 'modal-message info';
+    quickAddSubmitBtn.disabled = true; quickAddCancelBtn.disabled = true;
+
+    try {
+        const response = await fetch('/nyr/quick_add/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            quickAddMessageDiv.textContent = 'Stock added successfully!';
+            quickAddMessageDiv.className = 'modal-message success';
+            setTimeout(() => {
+                quickAddModal.style.display = 'none';
+                window.location.reload();
+            }, 1000);
+        } else {
+            quickAddMessageDiv.textContent = `Error: ${result.error || 'Failed to add stock.'}`;
+            quickAddMessageDiv.className = 'modal-message error';
+        }
+    } catch (error) {
+        console.error('Quick Add Fetch Error:', error);
+        quickAddMessageDiv.textContent = 'Network error or server issue.';
+        quickAddMessageDiv.className = 'modal-message error';
+    } finally {
+         quickAddSubmitBtn.disabled = false; quickAddCancelBtn.disabled = false;
+    }
+}
+
+const quickAddIsaInputForPaste = document.getElementById('quickAddIsa');
+const quickAddLineInputForPaste = document.getElementById('quickAddLine');
+
+if (quickAddIsaInputForPaste) {
+  quickAddIsaInputForPaste.addEventListener('paste', function(event) {
+      event.preventDefault();
+      const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+      const cleanedText = pastedText.replace(/\s+/g, '');
+      const start = event.target.selectionStart;
+      const end = event.target.selectionEnd;
+      const originalValue = event.target.value;
+      event.target.value = originalValue.substring(0, start) + cleanedText + originalValue.substring(end);
+      event.target.selectionStart = event.target.selectionEnd = start + cleanedText.length;
+      const inputEvent = new Event('input', { bubbles: true });
+      event.target.dispatchEvent(inputEvent);
+  });
+}
+
+if (quickAddLineInputForPaste) {
+  quickAddLineInputForPaste.addEventListener('paste', function(event) {
+      event.preventDefault();
+      const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+      const cleanedText = pastedText.replace(/\s+/g, '');
+      const start = event.target.selectionStart;
+      const end = event.target.selectionEnd;
+      const originalValue = event.target.value;
+      event.target.value = originalValue.substring(0, start) + cleanedText + originalValue.substring(end);
+      event.target.selectionStart = event.target.selectionEnd = start + cleanedText.length;
+      const inputEvent = new Event('input', { bubbles: true });
+      event.target.dispatchEvent(inputEvent);
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyStylesAfterSort();
+  loadFiltersFromLocalStorage();
+  loadBacklogVisibility();
+  updateDockFullness();
+});
+
+</script>
+
+<style>
+    /* --- Podstawowe style --- */
+    body {
+        background-color: #0d1117;
+        color: #c9d1d9;
+        font-family: 'Segoe UI', sans-serif;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        font-size: 15px;
+    }
+    /* Zmiana: Usunięcie podświetlania hyperlinków - MODIFIED */
+    /* Default link style, less aggressive to allow overrides */
+    a {
+        color: #58a6ff; /* Default link color */
+        text-decoration: none;
+        outline: none;
+        background-color: transparent;
+    }
+    a:hover, a:focus {
+        color: #79bbff; /* Lighter blue for hover, can be overridden */
+        text-decoration: none; /* Keep no underline by default for links, can be added specifically */
+        outline: none;
+    }
+    a:active {
+        color: #3e90ff; /* Darker blue for active, can be overridden */
+        outline: none;
+    }
+    /* --- Koniec podstawowych stylów --- */
+
+    /* --- Glassmorphism Base Styles --- */
+    .glass-panel, .glass-modal-content, .glass-filter-options, .glass-table {
+        background: rgba(30, 35, 42, 0.75);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        border: 1px solid rgba(139, 148, 158, 0.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0,0,0,0.1);
+        padding: 20px;
+        position: relative;
+    }
+
+    .glass-panel-header {
+        font-family: 'Segoe UI Semibold', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #c9d1d9;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.15);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+    /* Zmiana: Grubsza i jaśniejsza czcionka dla specyficznych nagłówków paneli */
+    .panel-title-highlight {
+        font-weight: 800 !important; /* Grubsza czcionka */
+        color: #f0f6fc !important;   /* Jaśniejsza czcionka */
+    }
+
+     /* Przywrócenie oryginalnego rozmiaru dla nagłówków paneli TRAILER/CONTAINER TYPE i DOCK FULLNESS */
+    #trailerAndDockContainer .glass-panel .glass-panel-header {
+        font-size: 26px; /* Oryginalny rozmiar */
+    }
+
+
+    .glass-tile {
+        background: rgba(40, 45, 52, 0.6);
+        backdrop-filter: blur(8px) saturate(130%);
+        -webkit-backdrop-filter: blur(8px) saturate(130%);
+        border: 1px solid rgba(139, 148, 158, 0.15);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .glass-tile:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        border-color: rgba(88, 166, 255, 0.3);
+    }
+    .tile-title { font-size: 17px; font-weight: 500; color: #8b949e; margin-bottom: 8px; }
+    .tile-value { font-size: 28px; font-weight: 700; color: #c9d1d9; }
+    /* --- End Glassmorphism Base Styles --- */
+
+    /* --- Specific Panel Stylings (colored borders/accents) --- */
+    /* Zmiana: Zmniejszenie podświetlenia/poświaty w panelu total backlog */
+    .total-backlog-panel-styling {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.85), rgba(192, 57, 43, 0.85));
+        border-color: rgba(231, 76, 60, 0.3); /* Slightly reduced border opacity */
+        box-shadow: 0 4px 20px rgba(192, 57, 43, 0.3), 0 1px 2px rgba(0,0,0,0.05); /* Softer, less spread shadow */
+    }
+    .total-backlog-panel-styling .value {
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Softer text shadow */
+    }
+    .total-backlog-panel-styling div[style*="font-size: 30px"] {
+        font-size: 30px !important;
+        font-weight: 800;
+        color: #f0f6fc !important;
+    }
+
+
+    .tsi-panel-styling .glass-panel-header { border-left: 10px solid #00A7FF; padding-left: 10px;}
+    .nvf-panel-styling .glass-panel-header { border-left: 10px solid #d96614; padding-left: 10px;}
+    .pax-panel-styling .glass-panel-header { border-left: 10px solid #B8860B; padding-left: 10px;}
+    .mix-panel-styling .glass-panel-header { border-left: 10px solid #28a745; padding-left: 10px;}
+    .special-panel-styling .glass-panel-header { border-left: 10px solid #aa46ce; padding-left: 10px;}
+    .unverified-panel-styling .glass-panel-header { border-left: 10px solid #848482; padding-left: 10px;}
+
+
+    /* --- Główna tabela (#stock) - Style --- */
+    .main-table-container {
+        width: 96%; margin: 25px auto; border-radius: 12px;
+        overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border: 0px solid rgba(139, 148, 158, 0.2);
+    }
+    .table.glass-table {
+        width: 100%; border-collapse: separate; border-spacing: 0;
+        padding: 0; border-radius: 0; box-shadow: none;
+        background: rgba(22, 27, 34, 0.8);
+    }
+    .table.glass-table th {
+        background: rgba(40, 45, 52, 0.85); color: #c9d1d9;
+        font-weight: 700; cursor: pointer; padding: 15px 12px;
+        letter-spacing: 0.5px; border: 2.5px solid rgba(60, 65, 72, 0.7);
+        border-bottom-width: 2px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: sticky; top: 0; z-index: 10;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        text-transform: uppercase; white-space: nowrap;
+        font-size: 20px;
+    }
+    .table.glass-table th:not(:nth-child(1)):hover { background-color: rgba(50, 55, 62, 0.9); color: #fff; }
+    .table.glass-table th.asc::after { content: " ▲"; color: #58a6ff; font-size: 0.9em; }
+    .table.glass-table th.desc::after { content: " ▼"; color: #ff7b72; font-size: 0.9em; }
+
+    /* Zmiana: Styl dla nagłówków kolumn danych - szklany/metaliczny */
+    .table.glass-table th.styled-th {
+        position: relative; /* For gradient overlay */
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.01) 50%, rgba(0,0,0,0.05) 100%);
+        box-shadow: inset 0px 1px 1px 0px rgba(255,255,255,0.12), /* Brighter top highlight */
+                    inset 0px -1px 1px 0px rgba(0,0,0,0.25), /* Darker bottom shadow for depth */
+                    0 1px 2px rgba(0,0,0,0.15); /* Subtle outer shadow */
+        border-bottom: 1px solid rgba(0,0,0,0.35);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.5); /* Slightly stronger text shadow */
+    }
+    /* Zachowanie oryginalnych kolorów tła, gradient będzie na wierzchu */
+    .table.glass-table th.th-nvf-pp    { background-color: rgba(138, 83, 49, 0.902) !important; }
+    .table.glass-table th.th-pp-qty    { background-color: rgba(125, 101, 86, 0.902) !important; }
+    .table.glass-table th.th-nvf-mix   { background-color: rgba(120, 113, 47, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-nvf { background-color: rgba(130, 124, 65, 0.902) !important; }
+    .table.glass-table th.th-fba-sb    { background-color: rgba(57, 122, 78, 0.902) !important; }
+    .table.glass-table th.th-sb-qty    { background-color: rgba(68, 138, 90, 0.902) !important; }
+    .table.glass-table th.th-tsi-pax   { background-color: rgba(64, 85, 135, 0.902) !important; }
+    .table.glass-table th.th-pax-qty   { background-color: rgba(88, 111, 166, 0.902) !important; }
+    .table.glass-table th.th-tsi-mix   { background-color: rgba(94, 69, 135, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-tsi { background-color: rgba(115, 95, 145, 0.902) !important; }
+
+
+    .table.glass-table td {
+        padding: 14px 12px; border: 2.5px solid rgba(60, 65, 72, 0.5);
+        position: relative;
+        font-weight: 700;
+        text-align: center; vertical-align: middle; color: #c9d1d9;
+        transition: background-color 0.15s ease, filter 0.15s ease;
+        font-size: 20px;
+    }
+    /* Zmiana: Usunięcie podświetlenia kolorem niebieskim hyperlinków w kolumnie ISA */
+    .table.glass-table tbody td:nth-child(2) a,
+    .table.glass-table tbody td:nth-child(2) a:link,
+    .table.glass-table tbody td:nth-child(2) a:visited,
+    .table.glass-table tbody td:nth-child(2) a:hover,
+    .table.glass-table tbody td:nth-child(2) a:focus,
+    .table.glass-table tbody td:nth-child(2) a:active {
+        color: white !important;
+        text-decoration: none !important;
+        background-color: transparent !important; /* Upewnienie się, że tło się nie zmienia */
+    }
+
+    .table.glass-table tbody tr:nth-child(odd) td { background-color: rgba(35, 42, 52, 0.7); }
+    .table.glass-table tbody tr:nth-child(even) td { background-color: rgba(25, 30, 38, 0.75); }
+
+    .table.glass-table tbody tr td:nth-child(n+5):nth-child(-n+14) {}
+    .table.glass-table tbody tr:nth-child(odd) td:nth-child(n+5):nth-child(-n+14) {
+        /* background-color: rgba(38, 45, 55, 0.7); Tło dla tych komórek jest teraz zarządzane przez JS */
+    }
+    .table.glass-table tbody tr:nth-child(even) td:nth-child(n+5):nth-child(-n+14) {
+        /* background-color: rgba(28, 33, 41, 0.75); Tło dla tych komórek jest teraz zarządzane przez JS */
+    }
+
+    /* Row hover effect using pseudo-element overlay to preserve cell colors */
+    .table.glass-table tbody tr.row-hover td {
+        position: relative; /* Required for pseudo-element positioning */
+    }
+    .table.glass-table tbody tr.row-hover td::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(200, 200, 200, 0.1); /* Subtle light overlay */
+        pointer-events: none; /* So it doesn't interfere with mouse events */
+        z-index: 1; /* Above cell background, below content */
+    }
+
+    /* Specific hover for date cells if needed (can adjust overlay color) */
+    .table.glass-table tbody tr.row-hover td[style*="rgb(214, 6, 6)"]::after, /* d60606 red */
+    .table.glass-table tbody tr.row-hover td[style*="rgb(189, 176, 43)"]::after /* bdb02b yellow */ {
+        background-color: rgba(255, 255, 255, 0.15); /* Brighter overlay for these specific cells */
+    }
+
+
+    .table.glass-table td:nth-child(4) { position: relative; padding-left: 25px !important; }
+    .table.glass-table td:nth-child(4)::before {
+        content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+        width: 8px; height: 65%; border-radius: 4px;
+        transition: background-color 0.3s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .table.glass-table td:nth-child(4).line-dock::before { background-color: #ff7b00; }
+    .table.glass-table td:nth-child(4).line-ib::before { background-color: #007bff; }
+    .table.glass-table td:nth-child(4).line-default::before { background-color: #800080; }
+
+    .table.glass-table tbody tr td:nth-child(16) { color: #ff7b72; font-weight: 600; }
+    /* --- Koniec stylów głównej tabeli --- */
+
+    /* --- Kontrolki (Przyciski, Filtry, Wyszukiwarka) - Style --- */
+    .controls-container.glass-panel {
+        display: flex; justify-content: space-between; align-items: center;
+        margin: 20px 2% 15px 2%; flex-wrap: wrap; gap: 15px;
+        padding: 15px 20px; z-index: 20;
+    }
+    .controls-left { display: flex; align-items: center; gap: 15px; }
+    .filter-container { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; position: relative; }
+
+    .quick-add-button, .add-stock-button, #filter-toggle-button, #reset-filters-button, .toggle-backlog-button {
+        padding: 12px 22px;
+        font-size: 20px;
+        font-weight: 700;
+        color: white !important; /* Ensure text is white for these buttons */
+        text-decoration: none !important;
+        border-radius: 6px; border: 1px solid rgba(139, 148, 158, 0.3);
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-out;
+        cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        background-color: rgba(56, 62, 75, 0.8);
+        box-shadow: 0 1px 0 rgba(27,31,35,.04),inset 0 1px 0 hsla(0,0%,100%,.25);
+        will-change: transform;
+    }
+     .toggle-backlog-button { /* Specific adjustments if needed, base is covered above */
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .quick-add-button:hover, .add-stock-button:hover, #filter-toggle-button:hover, #reset-filters-button:hover, .toggle-backlog-button:hover {
+        background-color: rgba(66, 72, 85, 0.9); border-color: rgba(139, 148, 158, 0.5);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transform: translateY(-1px); /* Unified hover animation */
+        color: white !important; /* Ensure text remains white on hover */
+    }
+     .quick-add-button:active, .add-stock-button:active, #filter-toggle-button:active, #reset-filters-button:active, .toggle-backlog-button:active {
+        transform: translateY(0px) scale(0.98); /* Unified active animation */
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    /* MODIFIED BUTTON COLORS */
+    .quick-add-button { background-color: rgba(31, 110, 180, 0.8); border-color: rgba(51, 130, 200, 0.5); color: #fff !important; } /* Blue */
+    .quick-add-button:hover { background-color: rgba(41, 120, 190, 0.9); }
+    .add-stock-button { background-color: rgba(45, 133, 69, 0.8); border-color: rgba(69, 153, 89, 0.5); color: #fff !important; } /* Green */
+    .add-stock-button:hover { background-color: rgba(55, 143, 79, 0.9); }
+
+
+    .search-input {
+        padding: 16px 15px; font-size: 17px; font-weight: 500;
+        background: rgba(22, 27, 34, 0.85); color: #c9d1d9;
+        border-radius: 6px; border: 1px solid rgba(139, 148, 158, 0.3);
+        transition: all 0.2s ease-in-out; min-width: 250px; box-sizing: border-box; height: 46px;
+    }
+    .search-input:focus {
+        outline: none; border-color: #58a6ff; background: rgba(32, 37, 44, 0.9);
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    }
+
+    /* Zmiana: Usunięcie podświetlania kolorem niebieskim hyperlinków dla przycisków akcji */
+    /* Ensures that <a> tags styled as buttons, or <a> tags within buttons, are white */
+    .btn-edit, a.btn-edit, .btn-edit a,
+    .btn-delete, a.btn-delete, .btn-delete a {
+        display: inline-block; padding: 7px 14px; margin: 2px; font-size: 14px;
+        font-weight: 500; color: white !important; border: none; border-radius: 5px;
+        cursor: pointer; text-align: center; text-decoration: none !important;
+        background-color: rgba(17, 113, 222, 0.839); border: 1px solid rgba(88, 166, 255, 0.3);
+        filter: none !important;
+    }
+    .btn-edit:hover, a.btn-edit:hover, .btn-edit a:hover,
+    .btn-delete:hover, a.btn-delete:hover, .btn-delete a:hover {
+        color: white !important;
+        text-decoration: none !important;
+        /* Keep background changes if desired, or make them consistent */
+    }
+    .btn-delete, a.btn-delete, .btn-delete a {
+        background-color: rgba(218, 55, 68, 0.7); border-color: rgba(218,55,68,0.3);
+    }
+    .btn-delete:hover, a.btn-delete:hover, .btn-delete a:hover {
+         background-color: rgba(191, 6, 6, 1); /* Example hover for delete */
+    }
+
+
+    .filter-options.glass-filter-options {
+        position: absolute; right: 0; top: calc(100% + 10px); z-index: 1051;
+        width: clamp(480px, 40vw, 600px); max-height: 75vh; overflow-y: auto;
+        transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+        opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+        padding: 25px;
+    }
+    .filter-options.glass-filter-options.hidden {
+        opacity: 0; visibility: hidden; transform: translateY(10px); pointer-events: none;
+    }
+    .filter-section { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid rgba(139, 148, 158, 0.15); }
+    .filter-section:last-child { border-bottom: none; margin-bottom: 8px; }
+    .filter-section strong { /* MODIFIED FONT SIZE */
+        display: block; margin-bottom: 14px; color: #80baff;
+        font-size: 1.7em; /* Increased from 1.5em */
+        font-weight: 700;
+    }
+    .filter-section label { /* MODIFIED FONT SIZE */
+        display: flex; align-items: center; margin-bottom: 12px; color: #adb5bd;
+        cursor: pointer;
+        font-size: 1.5em; /* Increased from 1.3em */
+        font-weight: 600;
+    }
+    .filter-section label input[type="checkbox"] { /* MODIFIED SCALE AND MARGIN */
+        margin-right: 16px; /* Increased margin */
+        cursor: pointer; transform: scale(1.5); /* Increased scale */
+        accent-color: #58a6ff; background-color: #0d1117;
+        border: 1px solid #30363d; border-radius: 3px;
+    }
+    .filter-section label input[type="checkbox"]:checked { background-color: #58a6ff; }
+
+    /* Styles for new Filter Mode section */
+    .filter-mode-section { /* Inherits some styles from .filter-section */
+         /* Specific styles if needed, otherwise relies on .filter-section */
+    }
+    .filter-mode-section strong {
+        /* Inherits from .filter-section strong, already increased */
+    }
+    .filter-mode-section label {
+        /* Inherits from .filter-section label, already increased */
+    }
+    .filter-mode-section label input[type="radio"] { /* MODIFIED SCALE AND MARGIN */
+        margin-right: 16px; /* Consistent with checkbox */
+        cursor: pointer;
+        transform: scale(1.5); /* Consistent with checkbox */
+        accent-color: #58a6ff; /* Consistent with checkbox */
+        background-color: #0d1117; /* Optional: for better theme consistency */
+        border: 1px solid #30363d; /* Optional: for better theme consistency */
+        border-radius: 50%; /* Ensure it's round */
+    }
+
+    #reset-filters-button.reset-filters-active {
+        display: block; width: 100%; margin-top: 18px;
+        background-color: rgba(218, 55, 68, 0.8); border-color: rgba(218,55,68,0.4); color: #fff !important;
+    }
+    #reset-filters-button.reset-filters-active:hover { background-color: rgba(218, 55, 68, 0.95); }
+
+    .hidden { display: none !important; }
+    /* --- Koniec stylów Kontrolek --- */
+
+
+    /* --- Style tagów (z nyr_summary, zachowując kształt z nyr_stock) --- */
+    span.tag-highlight {
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 16px;
+        display: inline-block;
+        margin: 1px 3px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.4);
+        transition: all 0.25s ease;
+        position: relative;
+        text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 0.5px;
+        vertical-align: middle;
+        border: none;
+        line-height: 1.5;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.05) 51%, rgba(0,0,0,0.1) 100%);
+        overflow: hidden;
+        color: white; /* Default color for tags, can be overridden by specific tag styles */
+    }
+    span.tag-highlight:hover {
+        filter: brightness(1.2);
+        transform: translateY(-1px) scale(1.02);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    /* --- Kolory tagów (z nyr_summary) --- */
+    span.mix-highlight { color: #ffffff; background-color: #1f7a38; }
+    span.pax-highlight { color: #ffffff; background-color: #75592e; }
+    span.ll_pax-highlight { color: #ffffff; background-color: #73472a; }
+    span.oc-highlight { color: #ffffff; background-color: #036e6c; }
+    span.tl-highlight { color: #ffffff; background-color: #CC5500; }
+    span.hv-highlight { color: #ffffff; background-color: #808000; }
+    span.cage-highlight { color: #ffffff; background-color: #aa46ce; }
+    span.unsell-highlight { color: #ffffff; background-color: #7C51C9; }
+    span.wro1_sell-highlight { color: #ffffff; background-color: #483D8B; }
+    span.rotom-highlight { color: #222222; background-color: #66CCFF; }
+    span.carrier-highlight { color: #333333; background-color: #CCCC66; }
+    span.ats-highlight { color: #ffffff; background-color: #4682B4; }
+    span.prep-highlight { color: #111111; background-color: #FFB6C1; }
+    span.oversize-highlight { color: #ffffff; background-color: #FF8C00; }
+    span.do_przebudowy-highlight,
+    span.do_streczowania-highlight {
+        color: #ffffff; background-color: #B03060;
+    }
+    span.double_stack-highlight { color: #ffffff; background-color: #B03060; }
+    span.do_sprawdzenia-highlight {
+        color: #ffffff; background-color: #848482;
+    }
+    span.karma-highlight { color: #ffffff; background-color: #D95F02; }
+
+    /* NEW TAG STYLES */
+    span.deutp-highlight {
+        color: #111111;
+        background-color: #ffffff;
+        border: 2px solid #FFC300; /* Yellow border */
+        padding: 2px 8px; /* Adjust padding to account for border */
+    }
+    span.slamd-highlight {
+        color: #111111;
+        background-color: #ffffff;
+        border: 2px solid #28a745; /* Green border */
+        padding: 2px 8px; /* Adjust padding to account for border */
+    }
+    span.d2d-highlight { color: #ffffff; background-color: #d60606; }
+    /* --- Koniec stylów tagów --- */
+
+
+    /* === Style dla tabel Podsumowań (DETAILS TABLE) === */
+    .details-table.glass-table {
+        margin-top: 10px; padding:0; border-radius: 8px; overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15); background: rgba(22, 27, 34, 0.7);
+    }
+    /* Zmiana: Jednolity kolor tła dla komórek td w tabelach backlogu */
+    .details-table.glass-table tbody td {
+        background-color: rgba(30, 33, 39, 0.85) !important;
+        padding: 12px 10px; border-bottom: 1px solid rgba(60, 65, 72, 0.4);
+        color: #adb5bd;
+        font-size: 23px;
+        font-weight: bold;
+        text-align: center; /* Ensuring all detail table data cells are centered */
+    }
+    .details-table.glass-table thead th {
+        background-color: rgba(40, 45, 52, 0.75);
+        font-weight: 700;
+        font-size: 22px;
+        color: #c9d1d9; text-transform: uppercase; letter-spacing: 0.4px;
+        border-bottom: 1px solid rgba(80,85,92,0.6);
+        text-align: center; /* Ensuring header cells are centered */
+    }
+    .details-table.glass-table tbody tr:last-child td { border-bottom: none; }
+
+    .details-table.glass-table th:not(:last-child), .details-table.glass-table td:not(:last-child) {
+        border-right: 1px solid rgba(60, 65, 72, 0.4);
+    }
+    .details-table.glass-table tbody tr:hover td {
+        background-color: rgba(58, 106, 155, 0.3) !important;
+        color: #fff;
+    }
+    .details-table.glass-table td:first-child {
+        position: relative; padding-left: 25px !important;
+        text-align: left; /* Kept left for type column due to ::before element */
+        font-weight: 700;
+        font-size: 22px;
+        color: #c9d1d9;
+    }
+    .details-table.glass-table td:first-child::before {
+        content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+        width: 6px; height: 60%; border-radius: 3px;
+        box-shadow: inset 0 0 2px rgba(0,0,0,0.3); transition: opacity 0.2s ease, background-color 0.2s ease; opacity: 1;
+    }
+    .details-table.glass-table td:first-child.indicator-hidden::before { opacity: 0; }
+    .details-table .tbody-tsi td:first-child::before { background-color: #00A7FF; }
+    .details-table .tbody-nvf td:first-child::before { background-color: #d96614; }
+    .details-table .tbody-pax td:first-child::before { background-color: #B8860B; } /* Dotyczy wszystkich wierszy w tbody-pax, w tym KARMA */
+    .details-table .tbody-mix td:first-child::before { background-color: #28a745; }
+    .details-table .tbody-special td:first-child::before { background-color: #aa46ce; }
+    .details-table .tbody-unverified td:first-child::before { background-color: #848482; }
+    /* --- Koniec stylów tabel podsumowań --- */
+
+    /* --- Style Progress Bar --- */
+    .progress-bar-container {
+        width: 90%; height: 26px; background-color: rgba(13, 17, 23, 0.5);
+        border-radius: 13px; overflow: hidden; margin: 15px auto 5px auto;
+        border: 1px solid rgba(139, 148, 158, 0.15); box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .progress-bar {
+        height: 100%; width: 0%; background-color: #2ecc71;
+        background-image: linear-gradient(45deg, hsla(0,0%,100%,.15) 25%, transparent 25%, transparent 50%, hsla(0,0%,100%,.15) 50%, hsla(0,0%,100%,.15) 75%, transparent 75%, transparent);
+        background-size: 1rem 1rem; border-radius: 13px;
+        transition: width .5s ease, background-color .5s ease;
+        box-shadow: inset 0 -1px 1px rgba(0,0,0,0.1);
+    }
+    #dock-fullness-percentage { color: #8b949e; font-size: 0.9em; margin-left: 8px; }
+    /* --- Koniec stylów Progress Bar --- */
+
+    /* Style dla modala Quick Add */
+    .modal {
+        display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+        overflow: auto; background-color: rgba(13, 17, 23, 0.6);
+        -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+        padding-top: 5%;
+    }
+    .modal-content.glass-modal-content {
+      margin: auto; padding: 25px 30px; width: 90%; max-width: 600px;
+      background: rgba(22, 27, 34, 0.9);
+    }
+    .close-button {
+        color: #8b949e; position: absolute; top: 15px; right: 20px;
+        font-size: 30px; font-weight: bold; transition: color 0.2s ease;
+    }
+    .close-button:hover, .close-button:focus { color: #c9d1d9; text-decoration: none; cursor: pointer; }
+    .modal h2 {
+        margin-top: 0; color: #c9d1d9; text-align: center; margin-bottom: 25px;
+        font-size: 2.2em;
+        font-weight: 700;
+    }
+    .modal-form-group { margin-bottom: 18px; }
+    .modal-form-group label {
+        display: block; margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 1.4em;
+        color: #8b949e;
+    }
+    .modal-form-group input[type="number"],
+    .modal-form-group input[type="text"],
+    .modal-form-group input[type="datetime-local"],
+    .modal-form-group select {
+        width: 100%; padding: 13px; background: rgba(13, 17, 23, 0.9);
+        border: 1px solid rgba(139, 148, 158, 0.3); border-radius: 6px;
+        color: #c9d1d9;
+        font-size: 1.3em;
+        box-sizing: border-box; transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .modal-form-group input:focus, .modal-form-group select:focus {
+        outline: none; border-color: #58a6ff; background: rgba(22, 27, 34, 1);
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    }
+    .modal-buttons { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
+    .modal-button { /* Base style for modal buttons */
+        padding: 12px 24px;
+        font-size: 1.4em;
+        font-weight: 600;
+        color: white !important; /* Ensure text is white */
+        text-decoration: none !important;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease-out;
+    }
+    .modal-button.submit { background-color: rgba(45, 133, 69, 0.9); border-color: rgba(69, 153, 89, 0.6); }
+    .modal-button.submit:hover { background-color: rgba(55, 143, 79, 1); transform: translateY(-1px); }
+    .modal-button.submit:active { transform: translateY(0px) scale(0.98); }
+    .modal-button.submit:disabled { background-color: #30363d; border-color: #40464d; color: #6e7681 !important; cursor: not-allowed; }
+    .modal-button.cancel { background-color: rgba(139, 148, 158, 0.3); border-color: rgba(139,148,158,0.4); }
+    .modal-button.cancel:hover { background-color: rgba(139, 148, 158, 0.45); transform: translateY(-1px); }
+    .modal-button.cancel:active { transform: translateY(0px) scale(0.98); }
+
+
+    .modal-message { margin-top: 18px; padding: 12px 18px; border-radius: 6px; text-align: center; font-weight: 500; font-size: 1em;}
+    .modal-message.success { background-color: rgba(35,134,54,0.2); color: #7ee787; border: 1px solid rgba(35,134,54,0.4); }
+    .modal-message.error { background-color: rgba(218,55,68,0.2); color: #ff7b72; border: 1px solid rgba(218,55,68,0.4); }
+    .modal-message.info { background-color: rgba(88,166,255,0.2); color: #a8cfff; border: 1px solid rgba(88,166,255,0.4); }
+
+    /* Ensure any other <a> tags that should behave like buttons are white */
+    /* This is a general catch-all, specific classes are better if known (e.g. for logout button) */
+    a[class*="button"], a[role="button"] {
+        color: white !important;
+        text-decoration: none !important;
+    }
+    a[class*="button"]:hover, a[role="button"]:hover {
+        color: white !important;
+        text-decoration: none !important;
+    }
+
+</style>
+
+{% endblock %}

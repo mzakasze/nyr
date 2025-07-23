@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <meta http-equiv="refresh" content="300">
+    <title>{% block title %}DOCK NYR 2.0{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/clear_field.js' %}"></script>
+    {% block extrahead %}{% endblock %}
+<style>
+body {
+    font-size: 20px;
+    zoom: 0.5;
+    overflow-x: auto;
+    margin: 0;
+    background: linear-gradient(to bottom right, #232333, #10101a);
+    min-height: 100vh;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* MODIFIED: Selector changed to nav.glass-panel for specificity */
+nav.glass-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: auto;
+    min-height: 70px; /* MODIFIED: Target height for nav */
+    padding: 10px 40px; /* MODIFIED: Specific padding for nav (10px top/bottom, 40px left/right) */
+    position: relative;
+    margin-bottom: 20px; /* Add some space below nav */
+    /* Inherits glass styles (background, filter, border, etc.) from .glass-panel */
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo-panel {
+    background: transparent;
+    padding: 0px 0px;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    box-shadow: none;
+}
+
+.amazon-logo-nav {
+    height: 40px;
+    filter: brightness(0) invert(1);
+}
+
+.nav-title {
+    text-decoration: none;
+    font-size: 36px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.ktw5 {
+    color: #007BFF;
+    font-weight: 900;
+    margin-right: 5px;
+}
+
+.ib-dock {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.user-panel {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.user-info {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.user-label {
+    color: #ffffff;
+}
+
+.username {
+    color: #007BFF;
+    font-weight: 900;
+    margin-left: 10px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-button {
+    padding: 10px 25px; /* MODIFIED: Vertical padding reduced for shorter buttons */
+    border-radius: 8px;
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-button:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+.nav-button.active {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.7), rgba(0, 86, 179, 0.8)) !important;
+    border-color: rgba(97, 218, 251, 0.5) !important;
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+
+.logout-button {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.6), rgba(200, 33, 49, 0.7)) !important;
+}
+
+.logout-button:hover {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.8), rgba(200, 33, 49, 0.9)) !important;
+}
+
+
+/* --- GLASSMORPHISM STYLES --- */
+/* MODIFIED: 'nav' type selector removed from this group for padding, but nav element still uses .glass-panel class for visuals */
+.glass-panel, .glass-modal-content, .glass-filter-options {
+    background: rgba(35, 35, 55, 0.55);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    backdrop-filter: blur(12px) saturate(160%);
+    border-radius: 18px;
+    border: 1px solid rgba(210, 210, 255, 0.12);
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.35);
+    padding: 20px; /* MODIFIED: Restored to original 20px for general panels */
+    color: #f0f0f5;
+    position: relative;
+}
+/* If the nav element itself needs these base glass styles and isn't covered by nav.glass-panel explicitly for all of them,
+   it gets them via its class="glass-panel". The nav.glass-panel selector above handles its specific layout and padding. */
+
+.glass-panel-header {
+    background: rgba(45, 45, 65, 0.65);
+    padding: 12px 20px;
+    margin: -20px -20px 20px -20px; /* MODIFIED: Adjusted margins for 20px panel padding */
+    border-radius: 18px 18px 0 0;
+    border-bottom: 1px solid rgba(210, 210, 255, 0.1);
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+}
+
+.glass-tile {
+    background: rgba(55, 55, 75, 0.5);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
+    border-radius: 12px;
+    border: 1px solid rgba(210, 210, 255, 0.1);
+    padding: 18px;
+    text-align: center;
+    color: #e0e0e0;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-tile:hover {
+    background: rgba(70, 70, 95, 0.7);
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+.glass-tile .tile-title {
+    font-size: 1.1em; color: #c0c0d0; margin-bottom: 8px; font-weight: 500;
+}
+.glass-tile .tile-value {
+    font-size: 2em; font-weight: 700; color: #ffffff;
+}
+
+.glass-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px auto;
+    background: rgba(40, 40, 60, 0.45);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    overflow: hidden;
+    color: #e0e0e0;
+}
+
+.glass-table thead tr {
+    background: rgba(60, 60, 85, 0.65);
+}
+
+.glass-table th {
+    padding: 16px 12px;
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.35);
+    border-bottom: 1px solid rgba(210, 210, 255, 0.18);
+    border-right: 1px solid rgba(210, 210, 255, 0.08);
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.glass-table th:last-child {
+    border-right: none;
+}
+
+.glass-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(210, 210, 255, 0.08);
+    border-right: 1px solid rgba(210, 210, 255, 0.05);
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 500;
+    transition: background-color 0.25s ease;
+}
+.glass-table td:last-child {
+    border-right: none;
+}
+
+.glass-table tbody tr {
+    background-color: transparent;
+}
+
+.glass-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.glass-table tbody tr:hover td {
+    background-color: rgba(200, 200, 255, 0.12);
+    color: #fff;
+}
+
+.nav-button, .quick-add-button, .add-stock-button, #filter-toggle-button, #reset-filters-button, .toggle-backlog-button, .modal-button {
+    background: rgba(80, 80, 110, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(200, 200, 255, 0.15);
+    color: #f0f0f5 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    transition: all 0.25s ease-out;
+}
+.nav-button:hover, .quick-add-button:hover, .add-stock-button:hover, #filter-toggle-button:hover, #reset-filters-button:hover, .toggle-backlog-button:hover, .modal-button:hover {
+    background: rgba(95, 95, 125, 0.75);
+    border-color: rgba(220, 220, 255, 0.35);
+    box-shadow: 0 0 15px rgba(150, 150, 220, 0.25);
+    transform: translateY(-2px) scale(1.02);
+}
+.quick-add-button { background: linear-gradient(135deg, rgba(0, 123, 255, 0.65), rgba(0, 86, 179, 0.75)) !important; }
+.add-stock-button { background: linear-gradient(135deg, rgba(17, 194, 58, 0.65), rgba(15, 168, 50, 0.75)) !important; }
+#reset-filters-button.reset-filters-active { background: linear-gradient(135deg, rgba(220, 53, 69, 0.65), rgba(200, 33, 49, 0.75)) !important; }
+
+.modal-button.submit { background: linear-gradient(135deg, rgba(40, 167, 69, 0.65), rgba(33, 136, 56, 0.75)) !important; }
+.modal-button.cancel { background: linear-gradient(135deg, rgba(108, 117, 125, 0.55), rgba(90, 98, 104, 0.65)) !important; }
+
+
+@media (max-width: 768px) {
+    nav.glass-panel { /* Adjusted for mobile view, inherits base glass styles */
+        height: auto;
+        padding: 10px; /* Keep mobile nav padding compact */
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .nav-left, .nav-right {
+        gap: 10px;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .logo-panel { padding: 5px 0; }
+    .amazon-logo-nav { height: 25px; }
+    .nav-title { font-size: 24px; }
+    .user-info { font-size: 18px; }
+    .nav-buttons { gap: 10px; flex-direction: column; width: 100%; }
+    .nav-button { padding: 10px 15px; font-size: 18px; width: 100%; text-align: center; } /* Adjusted mobile button padding */
+}
+</style>
+</head>
+<body>
+<nav class="glass-panel"> {# Applied glass-panel class to nav #}
+    <div class="nav-left">
+        <div class="logo-panel">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" class="amazon-logo-nav" alt="Amazon">
+        </div>
+        <a href="{% url 'stock_list' %}" class="nav-title">
+            <span class="ktw5">KTW5</span>
+            <span class="ib-dock">IB DOCK NYR</span>
+        </a>
+        <div class="nav-buttons">
+            <a href="{% url 'stock_list' %}" class="nav-button {% if request.path == '/nyr/' %}active{% endif %}">
+                CURRENT BACKLOG
+            </a>
+            <a href="{% url 'nyr_summary' %}" class="nav-button {% if request.path == '/nyr_summary/' %}active{% endif %}">
+                SHIFT SUMMARY
+            </a>
+            <a href="{% url 'rotom_list' %}" class="nav-button {% if request.path == '/nyr/rotom/' %}active{% endif %}">
+                ROTOM
+            </a>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="nav-right">
+        <div class="user-panel">
+            <span class="user-info">
+                <span class="user-label">USER:</span>
+                <span class="username">{{ user.username|upper }}</span>
+            </span>
+            <a href="{% url 'logout' %}" class="nav-button logout-button">
+                LOGOUT
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</nav>
+{% block content %}
+{% endblock %}
+</body>
+</html>

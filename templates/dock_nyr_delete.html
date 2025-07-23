@@ -1,0 +1,297 @@
+{% extends 'dock_nyr_base.html' %}
+{% load static %}
+
+{% block title %}Confirm Delete - DOCK NYR 2.0{% endblock %}
+
+{% block content %}
+{# Full-screen overlay for modal focus effect #}
+<div class="page-backdrop-blur"></div>
+
+<div class="delete-page-container glass-panel">
+
+  <div class="glass-panel-header delete-confirmation-header">
+    <span style="font-size: 1.5em;">
+        <i class="fas fa-exclamation-triangle" style="color: #ffc107; margin-right: 10px;"></i>
+        Confirm Deletion
+    </span>
+  </div>
+
+  <p class="confirmation-text">
+    Are you sure you want to permanently delete the following stock item? This action cannot be undone.
+  </p>
+
+  <div class="stock-details-summary">
+    <h4 class="details-summary-header">Stock Details to be Deleted:</h4>
+    <p><strong>ID:</strong> {{ stock.id }}</p>
+    <p><strong>ISA:</strong> {{ stock.ISA }}</p>
+    <p><strong>SBD/SLA:</strong>
+        {% if stock.sbd_sla_manual_input %}
+            {{ stock.sbd_sla_manual_input }}<span class="manual-input-indicator">*</span>
+        {% elif stock.start_time %}
+            {{ stock.start_time|date:"Y-m-d H:i" }}
+        {% else %}
+            N/A
+        {% endif %}
+    </p>
+    <p><strong>Line/ID:</strong> {{ stock.line }}</p>
+    {% if stock.comment %}
+        <p><strong>Comment:</strong> <span id="stock-comment-display" class="comment-display-span">{{ stock.comment|truncatewords:30 }}</span></p>
+    {% endif %}
+    {% if stock.delay %}
+        <p><strong>Reason for Delay:</strong> <span class="comment-text">{{ stock.delay|truncatewords:30 }}</span></p>
+    {% endif %}
+     <p><strong>Added By:</strong> {{ stock.user.username|default:"N/A" }}</p>
+     <p><strong>Created At:</strong> {{ stock.created_at|date:"Y-m-d H:i" }}</p>
+     {# "Updated At" removed as per request #}
+  </div>
+
+  <form method="post" style="margin-top: 30px;">
+    {% csrf_token %}
+    <div class="form-buttons-container">
+      <button type="submit" class="action-button delete-button">
+        <i class="fas fa-trash-alt"></i> YES, DELETE
+      </button>
+      <a href="{% url 'stock_list' %}" class="action-button cancel-button">
+        <i class="fas fa-times"></i> CANCEL
+      </a>
+    </div>
+  </form>
+</div>
+
+<style>
+    .page-backdrop-blur {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(13, 17, 23, 0.5); /* Semi-transparent dark background */
+        -webkit-backdrop-filter: blur(5px); /* Blur effect for supporting browsers */
+        backdrop-filter: blur(5px); /* Standard blur effect */
+        z-index: 1040; /* Below the modal panel but above other content */
+    }
+
+    .delete-page-container.glass-panel {
+      position: relative; /* Ensure it's above the backdrop */
+      z-index: 1050;    /* Higher z-index than the backdrop */
+      margin: 60px auto;
+      padding: 35px;
+      max-width: 750px;
+      text-align: center;
+      background: rgba(35, 40, 50, 0.85); /* Slightly adjusted panel background */
+      backdrop-filter: blur(12px) saturate(160%);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      border: 1px solid rgba(139, 148, 158, 0.25);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+      border-radius: 12px; /* Consistent rounded corners */
+    }
+
+    .delete-confirmation-header {
+        /* Uses glass-panel-header from base.html */
+        color: #f0f6fc !important; /* Brighter text for header */
+        margin: -35px -35px 25px -35px; /* Adjust to fit new padding */
+        border-radius: 12px 12px 0 0;
+        padding: 18px 0; /* Adjusted padding */
+        font-size: 1.4em; /* Adjusted size */
+    }
+    .delete-confirmation-header .fas { /* Icon styling */
+        color: #ffc107; /* Amber/warning yellow for icon */
+        font-size: 1.1em; /* Slightly larger icon */
+    }
+
+    .confirmation-text {
+        font-size: 1.2em;
+        color: #c9d1d9;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .stock-details-summary {
+        margin-bottom: 30px;
+        text-align: left;
+        background: rgba(22, 27, 34, 0.7); /* Darker inner panel for details */
+        padding: 20px 25px;
+        border-radius: 8px;
+        border: 1px solid rgba(139, 148, 158, 0.2);
+    }
+
+    .details-summary-header {
+        color: #a8cfff; /* Light blue for sub-header */
+        margin-top: 0;
+        margin-bottom: 18px;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.15);
+        padding-bottom: 12px;
+        font-size: 1.35em;
+        font-weight: 600;
+    }
+
+    .stock-details-summary p {
+        font-size: 1.1em;
+        color: #c9d1d9;
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+    .stock-details-summary p strong {
+        color: #80baff;
+        min-width: 130px; /* Align labels */
+        display: inline-block;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+    .comment-display-span,
+    .stock-details-summary .comment-text {
+        color: #e0e0e0;
+        /* font-style: italic; - Removed italic for cleaner look with tags */
+    }
+    .manual-input-indicator {
+        color: #f39c12;
+        font-weight: bold;
+        margin-left: 4px;
+    }
+
+    .form-buttons-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+
+    .action-button {
+        padding: 12px 25px;
+        font-size: 1.2em;
+        font-weight: 700;
+        border-radius: 6px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.25s ease-out;
+        border: 1px solid transparent;
+        color: #fff !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 160px;
+        justify-content: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        background: rgba(80, 80, 110, 0.65); /* Consistent glass button base */
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(200, 200, 255, 0.2);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    }
+
+    .action-button:hover {
+        background: rgba(95, 95, 125, 0.85);
+        border-color: rgba(220, 220, 255, 0.4);
+        box-shadow: 0 0 18px rgba(150, 150, 220, 0.3);
+        transform: translateY(-2px) scale(1.03);
+    }
+     .action-button:active {
+        transform: translateY(0px) scale(0.97);
+        box-shadow: inset 0 1px 4px rgba(0,0,0,0.25);
+    }
+
+    .delete-button {
+        background: linear-gradient(135deg, rgba(210, 40, 50, 0.7), rgba(190, 25, 35, 0.8)) !important; /* Adjusted red gradient */
+        border-color: rgba(210, 40, 50, 0.5) !important;
+    }
+    .delete-button:hover {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.85), rgba(200, 33, 49, 0.95)) !important;
+        border-color: rgba(220, 53, 69, 0.65) !important;
+    }
+
+    .cancel-button {
+        background: linear-gradient(135deg, rgba(100, 108, 117, 0.6), rgba(80, 88, 95, 0.7)) !important; /* Adjusted grey gradient */
+        border-color: rgba(108, 117, 125, 0.35) !important;
+    }
+    .cancel-button:hover {
+        background: linear-gradient(135deg, rgba(108, 117, 125, 0.8), rgba(90, 98, 104, 0.9)) !important;
+        border-color: rgba(108, 117, 125, 0.55) !important;
+    }
+
+    /* Tag Highlight Styles (copied from dock_nyr_stock.html and refined) */
+    span.tag-highlight {
+        font-weight: 500; /* Adjusted weight for better fit in paragraph */
+        padding: 3px 8px; /* Slightly smaller padding */
+        border-radius: 14px;
+        display: inline-block;
+        margin: 0px 3px 2px 3px; /* Adjusted margin */
+        text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 1px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.3);
+        transition: all 0.2s ease;
+        position: relative;
+        text-transform: uppercase;
+        font-size: 0.85em; /* Adjusted size */
+        letter-spacing: 0.3px;
+        vertical-align: baseline; /* Better alignment with text */
+        border: none;
+        line-height: 1.4;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 50%, rgba(0,0,0,0.04) 51%, rgba(0,0,0,0.08) 100%);
+        overflow: hidden;
+        color: white;
+    }
+    span.tag-highlight:hover {
+        filter: brightness(1.15);
+        transform: translateY(-1px);
+    }
+
+    /* Specific Tag Colors */
+    span.mix-highlight { background-color: #1f7a38; }
+    span.pax-highlight { background-color: #856d4d; }
+    span.oc-highlight { background-color: #008B8B; }
+    span.tl-highlight { background-color: #D95F02; } /* Updated to distinct orange */
+    span.hv-highlight { background-color: #808000; }
+    span.cage-highlight { background-color: #aa46ce; }
+    span.unsell-highlight { background-color: #7C51C9; }
+    span.wro1_sell-highlight { background-color: #483D8B; }
+    span.rotom-highlight { color: #222222; background-color: #66CCFF; }
+    span.carrier-highlight { color: #333333; background-color: #CCCC66; }
+    span.ats-highlight { background-color: #4682B4; }
+    span.prep-highlight { color: #111111; background-color: #FFB6C1; }
+    span.oversize-highlight { background-color: #FF8C00; }
+    span.do_przebudowy-highlight,
+    span.do_streczowania-highlight,
+    span.double_stack-highlight { background-color: #B03060; }
+    span.do_sprawdzenia-highlight { background-color: #848482; }
+    span.pet_food-highlight { background-color: #006400; } /* Dark Green */
+    span.karma-highlight { background-color: #D95F02; }   /* Distinct Dark Orange, same as TL */
+    /* Add any other tags if necessary */
+
+</style>
+
+{% block extrahead %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function highlightTagsInComment() {
+        const commentDisplaySpan = document.getElementById('stock-comment-display');
+        if (!commentDisplaySpan || !commentDisplaySpan.textContent) {
+            return;
+        }
+
+        let originalText = commentDisplaySpan.textContent;
+        // Regex to find #TAG# patterns. Handles tags with spaces if needed, but primary format is #TAG_NAME#.
+        // Example: #DO PRZEBUDOWY# or #OC#
+        const tagRegex = /(#(?:[A-Z0-9_]+(?: [A-Z0-9_]+)*)#)/gi;
+
+        let newHtml = originalText.replace(tagRegex, (match) => {
+            const cleanedTagForClass = match.replace(/#/g, '').replace(/\s+/g, '_').toLowerCase();
+            const tagText = match.replace(/#/g, ''); // Text content of the tag without hashes
+            const tagClass = `${cleanedTagForClass}-highlight`; // e.g., oc-highlight, do_przebudowy-highlight
+            return `<span class="tag-highlight ${tagClass}">${tagText}</span>`;
+        });
+
+        if (commentDisplaySpan.innerHTML !== newHtml) {
+            commentDisplaySpan.innerHTML = newHtml;
+        }
+    }
+
+    highlightTagsInComment();
+});
+</script>
+
+{% endblock %}

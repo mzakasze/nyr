@@ -1,0 +1,608 @@
+{% extends 'dock_nyr_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="form-page-container glass-panel" style="margin: 20px auto; padding: 30px; max-width: 1800px;">
+  <form method="post" class="edit-stock-form">
+    {% csrf_token %}
+
+    <div class="user-info-container glass-panel-header" style="margin-bottom: 20px; font-size: 2em;">
+      EDITING STOCK AS: <strong>{{ request.user.username|upper }}</strong>
+    </div>
+
+    <div class="form-group" style="text-align: center; margin-bottom: 30px;">
+        <label for="{{ form.user.id_for_label }}" style="display: block; margin-bottom: 8px; font-size: 1.3em; font-weight: 600; color: #c9d1d9;">STOCK ADDED BY:</label>
+        {{ form.user }}
+    </div>
+
+
+    {# --- Tabele z polami formularza --- #}
+    <h3 class="form-main-section-title" style="text-align: center;">MAIN INFORMATION</h3>
+    <table class="form-table glass-table" id="stock-1" style="margin-bottom: 35px;">
+        <thead>
+          <tr>
+            <th style="width: 20%;">{{ form.ISA.label }}</th>
+            <th style="width: 25%;">SBD/SLA</th>
+            <th style="width: 15%;">{{ form.line.label }}</th>
+            <th style="width: 20%;">{{ form.comment.label }}</th>
+            <th style="width: 20%;">{{ form.delay.label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ form.ISA }}</td>
+            <td>
+              {# <<< ZMIANA START: Dodano pole manualnego wprowadzania daty, tak jak w add.html >>> #}
+              <label for="{{ form.start_time.id_for_label }}">{{ form.start_time.label }}:</label>
+              {{ form.start_time }}
+              <br><br>
+              <label for="{{ form.sbd_sla_manual_input.id_for_label }}">{{ form.sbd_sla_manual_input.label }}:</label>
+              {{ form.sbd_sla_manual_input }}
+              {# <<< ZMIANA KONIEC >>> #}
+            </td>
+            <td>
+              <input type="text" name="{{ form.line.name }}" id="{{ form.line.id_for_label }}" list="line-options" {% if form.line.value %}value="{{ form.line.value }}"{% endif %}>
+              <datalist id="line-options">
+                {% for i in range_102_123 %}
+                <option value="IB {{ i }}">
+                {% endfor %}
+                {% for i in range_01_28 %}
+                <option value="DOCK {% if i < 10 %}0{% endif %}{{ i }}">
+                {% endfor %}
+              </datalist>
+            </td>
+            <td>{{ form.comment }}</td>
+            <td>{{ form.delay }}</td>
+          </tr>
+        </tbody>
+    </table>
+
+    <h3 class="form-main-section-title" style="text-align: center;">TYPE AND QUANTITY</h3>
+    <table class="form-table glass-table" id="stock-2" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+            <th class="styled-th th-form-nvf-pp">{{ form.NVFPP.label }}</th>
+            <th class="styled-th th-form-pp-qty">PP QTY</th>
+            <th class="styled-th th-form-nvf-mix">{{ form.NVF_MIX.label }}</th>
+            <th class="styled-th th-form-mix-qty-nvf">MIX QTY</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ form.NVFPP }}</td>
+            <td>{{ form.NVF }}</td>
+            <td>{{ form.NVF_MIX }}</td>
+            <td>{{ form.MIX }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="form-table glass-table" id="stock-4" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+            <th class="styled-th th-form-fba-sb">FBA SB</th>
+            <th class="styled-th th-form-sb-qty">SB QTY</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ form.SB }}</td>
+            <td>{{ form.FBA }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="form-table glass-table" id="stock-3" style="margin-bottom: 35px;">
+        <thead>
+        <tr>
+            <th class="styled-th th-form-tsi-pax">{{ form.TSI_PAX.label }}</th>
+            <th class="styled-th th-form-pax-qty">PAX QTY</th>
+            <th class="styled-th th-form-tsi-mix">TSI MIX</th>
+            <th class="styled-th th-form-mix-qty-tsi">MIX QTY</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ form.TSI_PAX }}</td>
+            <td>{{ form.TSI }}</td>
+            <td>{{ form.TSI_MIX_P }}</td>
+            <td>{{ form.TSI_MIX_U }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {# --- Koniec tabel z polami formularza --- #}
+
+    {# === SEKCJA CHECKBOXÓW === #}
+    <div class="checkbox-section-container glass-panel" style="margin-bottom: 30px;">
+        <h3 class="form-section-title glass-panel-header" style="font-size: 1.8em;">TAGS</h3>
+        <div class="checkbox-groups-wrapper">
+
+            <div class="checkbox-row-wrapper">
+                <div class="checkbox-group">
+                    <h4 class="checkbox-group-title">TYPE OF TRAILER/CONTAINER</h4>
+                    <div class="tag-checkbox">
+                    <label for="oc-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="oc-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">OC</span>
+                    </label>
+                    </div>
+                    <div class="tag-checkbox">
+                    <label for="rotom-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="rotom-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">ROTOM</span>
+                    </label>
+                    </div>
+                    <div class="tag-checkbox">
+                    <label for="carrier-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="carrier-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">CARRIER</span>
+                    </label>
+                    </div>
+                    <div class="tag-checkbox">
+                    <label for="ats-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="ats-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">ATS</span>
+                    </label>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <h4 class="checkbox-group-title">OPERATOR</h4>
+                    <div class="tag-checkbox">
+                    <label for="slamd-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="slamd-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">SLAMD</span>
+                    </label>
+                    </div>
+                    <div class="tag-checkbox">
+                    <label for="deutp-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="deutp-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">DEUTP</span>
+                    </label>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <h4 class="checkbox-group-title">TYPE OF GOODS</h4>
+                    <div class="product-type-tags-wrapper">
+                        <div class="tag-checkbox">
+                        <label for="pax-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="pax-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">PAX</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="ll_pax-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="ll_pax-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">LL PAX</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="mix-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="mix-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">MIX</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <label for="tl-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="tl-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">TL</span>
+                            </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="hv-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="hv-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">HV</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="unsell-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="unsell-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">UNSELL</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="wro1sell-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="wro1sell-checkbox">
+                            <span class="checkmark"></span><span class="tag-text small-font-tag">WRO1_SELL</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="oversize-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="oversize-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">OVERSIZE</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                        <label for="prep-checkbox" class="custom-checkbox">
+                            <input type="checkbox" id="prep-checkbox">
+                            <span class="checkmark"></span><span class="tag-text">PREP</span>
+                        </label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <label for="karma-checkbox" class="custom-checkbox">
+                                <input type="checkbox" id="karma-checkbox">
+                                <span class="checkmark"></span><span class="tag-text">KARMA</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkbox-group additional-actions-group">
+                <h4 class="checkbox-group-title">ADDITIONAL ACTIONS</h4>
+                <div class="tag-checkbox">
+                <label for="do_przebudowy-checkbox" class="custom-checkbox">
+                    <input type="checkbox" id="do_przebudowy-checkbox">
+                    <span class="checkmark"></span><span class="tag-text">DO PRZEBUDOWY</span>
+                </label>
+                </div>
+                <div class="tag-checkbox">
+                <label for="do_streczowania-checkbox" class="custom-checkbox">
+                    <input type="checkbox" id="do_streczowania-checkbox">
+                    <span class="checkmark"></span><span class="tag-text">DO STRECZOWANIA</span>
+                </label>
+                </div>
+                <div class="tag-checkbox">
+                <label for="cage-checkbox" class="custom-checkbox">
+                    <input type="checkbox" id="cage-checkbox">
+                    <span class="checkmark"></span><span class="tag-text">CAGE</span>
+                </label>
+                </div>
+                <div class="tag-checkbox">
+                <label for="double_stack-checkbox" class="custom-checkbox">
+                    <input type="checkbox" id="double_stack-checkbox">
+                    <span class="checkmark"></span><span class="tag-text">DOUBLE STACK</span>
+                </label>
+                </div>
+                <div class="tag-checkbox">
+                <label for="do_sprawdzenia-checkbox" class="custom-checkbox">
+                    <input type="checkbox" id="do_sprawdzenia-checkbox">
+                    <span class="checkmark"></span><span class="tag-text">DO SPRAWDZENIA</span>
+                </label>
+                </div>
+                <div class="tag-checkbox">
+                    <label for="d2d-checkbox" class="custom-checkbox">
+                        <input type="checkbox" id="d2d-checkbox">
+                        <span class="checkmark"></span><span class="tag-text">D2D</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# === KONIEC SEKCJI CHECKBOXÓW === #}
+
+    <button type="submit" class="form-submit-button add-stock-button">SAVE CHANGES</button>
+  </form>
+</div>
+
+<style>
+    .form-page-container.glass-panel {
+      background: rgba(30, 35, 42, 0.85);
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      padding: 30px;
+      border: 1px solid rgba(139, 148, 158, 0.25);
+    }
+
+    .edit-stock-form .user-info-container.glass-panel-header {
+        border-bottom: 1px solid rgba(139, 148, 158, 0.2);
+        padding-bottom: 20px;
+        margin: -30px -30px 20px -30px; /* Adjusted margin */
+        border-radius: 10px 10px 0 0;
+    }
+    .edit-stock-form .user-info-container strong {
+        color: #58a6ff;
+    }
+
+    .edit-stock-form input#id_user { /* Readonly user field */
+        width: auto; /* Adjust width as needed, maybe make it smaller */
+        max-width: 300px;
+        padding: 10px 15px;
+        background: rgba(13, 17, 23, 0.7); /* Darker, less interactive */
+        border: 1px solid rgba(139, 148, 158, 0.2);
+        border-radius: 6px;
+        color: #a0a0a0; /* Greyed out text */
+        font-size: 1.1em;
+        text-align: center;
+        cursor: not-allowed;
+        display: inline-block; /* To center with text-align on parent */
+        margin-top: 5px;
+    }
+
+
+    .form-main-section-title {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #c9d1d9;
+        /* text-align: left; */ /* Removed to allow inline style to center */
+        margin-top: 20px;
+        margin-bottom: 15px;
+        padding-left: 10px;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.15);
+        padding-bottom: 10px;
+    }
+
+    .form-table.glass-table {
+        font-size: 1.1em;
+    }
+
+    .form-table.glass-table th {
+        font-size: 1.1em;
+        padding: 15px 10px;
+    }
+
+    .form-table.glass-table th.styled-th {
+        position: relative;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.01) 50%, rgba(0,0,0,0.05) 100%);
+        box-shadow: inset 0px 1px 1px 0px rgba(255,255,255,0.12),
+                    inset 0px -1px 1px 0px rgba(0,0,0,0.25),
+                    0 1px 2px rgba(0,0,0,0.15);
+        border-bottom: 1px solid rgba(0,0,0,0.35);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+        color: #fff;
+    }
+
+    .form-table.glass-table th.th-form-nvf-pp    { background-color: rgba(96, 71, 56, 0.9) !important; }
+    .form-table.glass-table th.th-form-pp-qty    { background-color: rgba(99, 89, 83, 0.9) !important; }
+    .form-table.glass-table th.th-form-nvf-mix   { background-color: rgba(100, 96, 62, 0.9) !important; }
+    .form-table.glass-table th.th-form-mix-qty-nvf { background-color: rgba(101, 98, 73, 0.9) !important; }
+    .form-table.glass-table th.th-form-fba-sb    { background-color: rgba(59, 100, 72, 0.9) !important; }
+    .form-table.glass-table th.th-form-sb-qty    { background-color: rgba(73, 101, 82, 0.9) !important; }
+    .form-table.glass-table th.th-form-tsi-pax   { background-color: rgba(62, 74, 102, 0.9) !important; }
+    .form-table.glass-table th.th-form-pax-qty   { background-color: rgba(73, 81, 100, 0.9) !important; }
+    .form-table.glass-table th.th-form-tsi-mix   { background-color: rgba(81, 72, 97, 0.9) !important; }
+    .form-table.glass-table th.th-form-mix-qty-tsi { background-color: rgba(89, 83, 98, 0.9) !important; }
+
+    .form-table.glass-table td {
+        padding: 12px 10px;
+        vertical-align: middle;
+    }
+    .form-table.glass-table td label { /* For SBD/SLA label if used in td */
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #adb5bd;
+        font-size: 0.95em;
+        text-align: left;
+    }
+
+    .edit-stock-form input[type="text"],
+    .edit-stock-form input[type="number"],
+    .edit-stock-form input[type="datetime-local"],
+    .edit-stock-form textarea,
+    .edit-stock-form select {
+        width: 95%;
+        padding: 12px 15px;
+        background: rgba(13, 17, 23, 0.85);
+        border: 1px solid rgba(139, 148, 158, 0.3);
+        border-radius: 6px;
+        color: #c9d1d9;
+        font-size: 1em;
+        box-sizing: border-box;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        text-align: center;
+    }
+    .edit-stock-form input[type="datetime-local"] { padding: 10px; }
+    .edit-stock-form input#id_sbd_sla_manual_input {
+        background: rgba(22, 30, 40, 0.85);
+        border-color: rgba(88, 166, 255, 0.4);
+    }
+
+    .edit-stock-form input:focus,
+    .edit-stock-form textarea:focus,
+    .edit-stock-form select:focus {
+        outline: none;
+        border-color: #58a6ff;
+        background: rgba(22, 27, 34, 0.95);
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    }
+    .edit-stock-form textarea { min-height: 80px; resize: vertical; }
+
+    .checkbox-section-container.glass-panel { padding: 25px; }
+    .checkbox-section-container .form-section-title.glass-panel-header { margin: -25px -25px 25px -25px; }
+    .checkbox-groups-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .checkbox-row-wrapper {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    .checkbox-group {
+      display: flex; flex-direction: column; gap: 12px; align-items: flex-start;
+      flex: 1; min-width: 280px; padding: 15px;
+      background: rgba(20, 25, 33, 0.6);
+      border: 1px solid rgba(139, 148, 158, 0.15); border-radius: 8px;
+    }
+    .checkbox-group.additional-actions-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .product-type-tags-wrapper {
+        display: grid; grid-template-columns: repeat(2, 1fr);
+        gap: 10px; width: 100%;
+    }
+    .product-type-tags-wrapper .tag-checkbox { min-width: 0; }
+
+    .checkbox-group-title {
+        font-size: 1.3em;
+        color: #c9d1d9;
+        margin-top: -5px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.1);
+        padding-bottom: 8px; width: 100%; text-align: left; font-weight: 600;
+    }
+    .tag-checkbox { display: flex; align-items: center; width: auto; }
+    .custom-checkbox {
+      display: flex; align-items: center; position: relative; cursor: pointer;
+      font-size: 1.1em; gap: 10px; padding: 10px 15px;
+      background: rgba(30, 38, 48, 0.7);
+      border: 1px solid rgba(139, 148, 158, 0.25); border-radius: 6px;
+      transition: all 0.25s ease; color: #c9d1d9;
+      min-width: 180px; justify-content: flex-start;
+    }
+    .custom-checkbox:hover {
+      background: rgba(40, 48, 58, 0.85);
+      border-color: rgba(88, 166, 255, 0.5);
+    }
+    .custom-checkbox input[type="checkbox"] { opacity: 0; position: absolute; width: 0; height: 0; }
+    .checkmark {
+      display: inline-block; width: 20px; height: 20px;
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid rgba(139, 148, 158, 0.3); border-radius: 4px;
+      position: relative; transition: all 0.25s ease; flex-shrink: 0;
+    }
+    .tag-text { flex-grow: 1; text-align: left; margin-left: 0; font-weight: 500; white-space: nowrap; }
+    .tag-text.small-font-tag { font-size: 0.9em; }
+    .custom-checkbox input[type="checkbox"]:checked ~ .checkmark { background: #58a6ff; border-color: #58a6ff; }
+    .checkmark:after {
+      content: "✓"; position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%); color: #ffffff;
+      font-size: 14px; font-weight: bold; opacity: 0; transition: opacity 0.2s ease-in-out;
+    }
+    .custom-checkbox input[type="checkbox"]:checked ~ .checkmark:after { opacity: 1; }
+
+    .form-submit-button.add-stock-button {
+        display: block;
+        width: 40%;
+        min-width: 250px;
+        margin: 40px auto 20px auto;
+        padding: 15px 30px;
+        font-size: 1.5em;
+        font-weight: 700;
+        letter-spacing: 1px;
+        background-color: rgba(40, 167, 69, 0.85);
+        color: #ffffff;
+        border: 1px solid rgba(40, 167, 69, 1);
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-submit-button.add-stock-button:hover,
+    .form-submit-button.add-stock-button:focus {
+        background-color: rgba(33, 136, 56, 0.95);
+        border-color: rgba(33, 136, 56, 1);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.4);
+    }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const commentField = document.getElementById('id_comment');
+      // Define checkboxes and their corresponding tags
+      const checkboxesConfig = [
+          { id: 'oc-checkbox', tag: '#OC#' },
+          { id: 'rotom-checkbox', tag: '#ROTOM#' },
+          { id: 'carrier-checkbox', tag: '#CARRIER#' },
+          { id: 'ats-checkbox', tag: '#ATS#' },
+          { id: 'pax-checkbox', tag: '#PAX#' },
+          { id: 'll_pax-checkbox', tag: '#LL PAX#' },
+          { id: 'mix-checkbox', tag: '#MIX#' },
+          { id: 'tl-checkbox', tag: '#TL#' },
+          { id: 'hv-checkbox', tag: '#HV#' },
+          { id: 'cage-checkbox', tag: '#CAGE#' },
+          { id: 'unsell-checkbox', tag: '#UNSELL#' },
+          { id: 'wro1sell-checkbox', tag: '#WRO1_SELL#' },
+          { id: 'oversize-checkbox', tag: '#OVERSIZE#' },
+          { id: 'prep-checkbox', tag: '#PREP#' },
+          { id: 'do_przebudowy-checkbox', tag: '#DO PRZEBUDOWY#' },
+          { id: 'do_streczowania-checkbox', tag: '#DO STRECZOWANIA#' },
+          { id: 'double_stack-checkbox', tag: '#DOUBLE STACK#' },
+          { id: 'do_sprawdzenia-checkbox', tag: '#DO SPRAWDZENIA#' },
+          { id: 'karma-checkbox', tag: '#KARMA#' },
+          { id: 'slamd-checkbox', tag: '#SLAMD#' },
+          { id: 'deutp-checkbox', tag: '#DEUTP#' },
+          { id: 'd2d-checkbox', tag: '#D2D#' }
+      ];
+
+      function updateCommentFromCheckboxes() {
+          if (!commentField) return;
+          let currentCommentValue = commentField.value;
+          let textWithoutTags = currentCommentValue;
+
+          // Remove all configured tags from the current comment to get the base text
+          checkboxesConfig.forEach(config => {
+              const regex = new RegExp(config.tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*', 'gi');
+              textWithoutTags = textWithoutTags.replace(regex, '');
+          });
+          textWithoutTags = textWithoutTags.replace(/\s+/g, ' ').trim(); // Clean up multiple spaces
+
+          let newTagsString = '';
+          checkboxesConfig.forEach(config => {
+              const checkbox = document.getElementById(config.id);
+              if (checkbox && checkbox.checked) {
+                  newTagsString += config.tag + ' ';
+              }
+          });
+
+          commentField.value = (newTagsString + textWithoutTags).trim();
+      }
+
+      function setCheckboxesFromComment() {
+          if (!commentField) return;
+          const currentCommentValue = commentField.value;
+          checkboxesConfig.forEach(config => {
+              const checkbox = document.getElementById(config.id);
+              if (checkbox) {
+                  const regex = new RegExp(config.tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+                  checkbox.checked = regex.test(currentCommentValue);
+              }
+          });
+      }
+
+      checkboxesConfig.forEach(config => {
+          const checkbox = document.getElementById(config.id);
+          if (checkbox) {
+              checkbox.addEventListener('change', updateCommentFromCheckboxes);
+          }
+      });
+
+      // Initialize checkboxes based on the current comment field value
+      setCheckboxesFromComment();
+
+      // Paste logic (remove spaces from most inputs, not user, comment, or delay)
+      const formInputsForPaste = document.querySelectorAll('.edit-stock-form input[type="text"], .edit-stock-form input[type="number"], .edit-stock-form textarea');
+      formInputsForPaste.forEach(input => {
+          if (input.id !== 'id_user' && input.id !== 'id_comment' && input.id !== 'id_delay' && input.id !== 'id_sbd_sla_manual_input') {
+              input.addEventListener('paste', function(event) {
+                  event.preventDefault();
+                  const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+                  const cleanedText = pastedText.replace(/\s+/g, '');
+
+                  const start = event.target.selectionStart;
+                  const end = event.target.selectionEnd;
+                  const originalValue = event.target.value;
+                  event.target.value = originalValue.substring(0, start) + cleanedText + originalValue.substring(end);
+                  event.target.selectionStart = event.target.selectionEnd = start + cleanedText.length;
+
+                  const inputEvent = new Event('input', { bubbles: true });
+                  event.target.dispatchEvent(inputEvent);
+              });
+          }
+      });
+
+      // Prevent form resubmission on refresh
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+
+      // Style the readonly user field if it's rendered using Django forms and has id_user
+      const userField = document.querySelector('input#id_user');
+      if (userField) {
+          userField.setAttribute('readonly', true);
+      }
+
+  });
+</script>
+
+{% endblock %}

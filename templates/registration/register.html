@@ -1,0 +1,286 @@
+{% extends 'dock_nyr_base.html' %}
+{% load static %}
+
+{% block title %}Create Account - DOCK NYR 2.0{% endblock %}
+
+{% block content %}
+{# This div creates the dark, uniform backdrop, covering other page elements #}
+<div class="login-page-backdrop-solid"></div>
+
+<div class="login-page-wrapper"> {# Reusing login-page-wrapper for consistent centering #}
+  <div class="register-container glass-panel"> {# Specific class for register panel if needed, inherits glass-panel #}
+    <div class="login-header-content"> {# Reusing header structure from login.html #}
+      <div class="logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" class="amazon-logo-login" alt="Amazon">
+        <div class="logo-divider"></div>
+        <span class="ktw5-logo-login">KTW5</span>
+      </div>
+      <h2 class="login-page-title">CREATE ACCOUNT</h2> {# Updated title #}
+    </div>
+    
+    {% if form.errors %}
+      <div class="login-error-message main-form-error"> {# General error message at the top #}
+          <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+          Please correct the errors below to continue.
+      </div>
+    {% endif %}
+    
+    <form method="post" class="login-main-form"> {# Reusing form structure from login.html #}
+      {% csrf_token %}
+      
+      <div class="form-field-group">
+        <label for="{{ form.username.id_for_label }}" class="form-field-label">LOGIN:</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+          <p class="form-field-error"><i class="fas fa-times-circle"></i> {{ error }}</p>
+        {% endfor %}
+      </div>
+      
+      <div class="form-field-group">
+        <label for="{{ form.password1.id_for_label }}" class="form-field-label">PASSWORD:</label>
+        {{ form.password1 }}
+        {% for error in form.password1.errors %}
+          <p class="form-field-error"><i class="fas fa-times-circle"></i> {{ error }}</p>
+        {% endfor %}
+      </div>
+      
+      <div class="form-field-group">
+        <label for="{{ form.password2.id_for_label }}" class="form-field-label">CONFIRM PASSWORD:</label>
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}
+          <p class="form-field-error"><i class="fas fa-times-circle"></i> {{ error }}</p>
+        {% endfor %}
+      </div>
+      
+      <div class="login-buttons-container">
+        <button type="submit" class="login-action-button login-primary-button"> {# REGISTER as primary action #}
+          <i class="fas fa-user-plus"></i> REGISTER
+        </button>
+        <a href="{% url 'login' %}" class="login-action-button login-secondary-button"> {# BACK TO LOGIN as secondary #}
+          <i class="fas fa-arrow-left"></i> BACK TO LOGIN
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Styles for the register page, closely mirroring login.html for consistency */
+/* Assumes body zoom:0.5 from base.html. Values are ~1.5x their previous settings. */
+
+.login-page-backdrop-solid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0d1117; /* Solid, very dark color */
+  z-index: 1000; 
+}
+
+.login-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  height: 100%; 
+  padding: 20px; /* This padding is for the wrapper, not the panel itself */
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+}
+
+.register-container.glass-panel {
+  width: 100%;
+  max-width: 825px; /* Was 550px or 600px, 550 * 1.5 = 825px */
+  padding: 52px 67px; /* Was 35px 45px -> (35*1.5)px (45*1.5)px = 52.5px 67.5px. Rounded. */
+  box-shadow: 0 24px 75px rgba(0, 0, 0, 0.5); /* Increased shadow */
+  border-radius: 20px; /* Slightly larger radius */
+}
+
+.login-header-content {
+  text-align: center;
+  margin-bottom: 45px; /* Was 30px -> 30 * 1.5 = 45px */
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px; /* Was 20px -> 20 * 1.5 = 30px */
+  margin-bottom: 37px; /* Was 25px -> 25 * 1.5 = 37.5px */
+}
+
+.amazon-logo-login {
+  height: 45px; /* Was 30px -> 30 * 1.5 = 45px */
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.logo-divider {
+  height: 45px; /* Was 30px -> 30 * 1.5 = 45px */
+  width: 2px; /* Was 1.5px -> ~2px */
+  background: rgba(210, 210, 255, 0.25);
+  border-radius: 2px;
+}
+
+.ktw5-logo-login {
+  color: #00A7FF;
+  font-size: 42px; /* Was 28px -> 28 * 1.5 = 42px */
+  font-weight: 800;
+  letter-spacing: 1.5px; /* Increased slightly */
+}
+
+.login-page-title {
+  color: #f0f6fc;
+  font-size: 39px; /* Was 26px -> 26 * 1.5 = 39px */
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.75px; /* Increased slightly */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-main-form {
+  display: flex;
+  flex-direction: column;
+  gap: 33px; /* Was 22px -> 22 * 1.5 = 33px */
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Was 8px -> 8 * 1.5 = 12px */
+}
+
+.form-field-label {
+  color: #adb5bd;
+  font-size: 24px; /* Was 16px -> 16 * 1.5 = 24px */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.login-main-form input[type="text"],
+.login-main-form input[type="password"] {
+  width: 100%;
+  padding: 21px 27px; /* Was 14px 18px -> (14*1.5) (18*1.5) = 21px 27px */
+  background: rgba(13, 17, 23, 0.9);
+  border: 1px solid rgba(139, 148, 158, 0.35);
+  color: #c9d1d9;
+  font-size: 25px; /* Was 17px -> ~25.5px, rounded */
+  font-weight: 500;
+  box-sizing: border-box;
+  border-radius: 10px; /* Slightly larger radius */
+  transition: all 0.2s ease;
+}
+
+.login-main-form input[type="text"]:focus,
+.login-main-form input[type="password"]:focus {
+  outline: none;
+  border-color: #58a6ff;
+  background: rgba(22, 27, 34, 0.95);
+  box-shadow: 0 0 0 4.5px rgba(88, 166, 255, 0.25); /* Shadow scaled by 1.5 */
+}
+
+.login-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* Was 15px -> 15 * 1.5 = 22.5px */
+  margin-top: 37px; /* Was 25px -> 25 * 1.5 = 37.5px */
+}
+
+.login-action-button {
+  padding: 22px 30px; /* Was 15px 20px -> (15*1.5) (20*1.5) = 22.5px 30px */
+  font-size: 25px;    /* Was 17px -> ~25.5px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px; /* Increased */
+  width: 100%;
+  border-radius: 10px; /* Slightly larger radius */
+  color: #fff !important;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px; /* Was 10px -> 10 * 1.5 = 15px */
+  border: 1px solid transparent;
+  transition: all 0.25s ease-out;
+  box-sizing: border-box;
+
+  background: rgba(80, 80, 110, 0.65);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-color: rgba(200, 200, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.login-action-button:hover {
+  background: rgba(95, 95, 125, 0.85);
+  border-color: rgba(220, 220, 255, 0.45);
+  box-shadow: 0 6px 27px rgba(0,0,0,0.25); /* Shadow scaled */
+  transform: translateY(-3px); /* Hover effect scaled */
+}
+.login-action-button:active {
+  transform: translateY(0px) scale(0.98);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.login-primary-button { /* REGISTER button - Green */
+  background: linear-gradient(135deg, rgba(20, 170, 70, 0.7), rgba(15, 140, 55, 0.8)) !important;
+  border-color: rgba(20, 170, 70, 0.5) !important;
+}
+.login-primary-button:hover {
+  background: linear-gradient(135deg, rgba(25, 190, 80, 0.85), rgba(20, 160, 65, 0.95)) !important;
+  border-color: rgba(25, 190, 80, 0.7) !important;
+}
+
+.login-secondary-button { /* BACK TO LOGIN button - Blue */
+  background: linear-gradient(135deg, rgba(0, 110, 220, 0.7), rgba(0, 80, 190, 0.8)) !important;
+  border-color: rgba(0, 110, 220, 0.5) !important;
+}
+.login-secondary-button:hover {
+  background: linear-gradient(135deg, rgba(10, 125, 235, 0.85), rgba(5, 95, 210, 0.95)) !important;
+  border-color: rgba(10, 125, 235, 0.7) !important;
+}
+
+/* Error message styling */
+.login-error-message.main-form-error { /* General errors at the top */
+  color: #ff9a9a; 
+  font-size: 22px; /* Was 15px -> 15 * 1.5 = 22.5px */
+  text-align: center;
+  margin-bottom: 30px; /* Was 20px -> 20 * 1.5 = 30px */
+  font-weight: 500;
+  background-color: rgba(200, 50, 60, 0.25); 
+  padding: 18px 27px; /* Was 12px 18px -> scaled */
+  border-radius: 10px; /* Scaled */
+  border: 1px solid rgba(200, 50, 60, 0.45); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-error-message .fas {
+    font-size: 1.1em; /* Relative to parent, will scale with parent */
+}
+
+.form-field-error { /* For individual field errors */
+  color: #ff8a80;
+  font-size: 19px; /* Was 13px -> 13 * 1.5 = 19.5px */
+  margin-top: 6px; /* Was 4px -> 4 * 1.5 = 6px */
+  font-weight: 500;
+  text-align: left;
+  padding-left: 7px; /* Was 5px -> ~7.5px */
+}
+.form-field-error .fas {
+    margin-right: 7px; /* Was 5px */
+    font-size: 0.9em; /* Relative */
+}
+
+</style>
+
+{% block extrahead %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
+
+{% endblock %}

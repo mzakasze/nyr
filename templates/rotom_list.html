@@ -1,0 +1,479 @@
+{% extends 'dock_nyr_base.html' %}
+{% load static %}
+
+{% block title %}ROTOM List{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="main-table-container" style="width: 98%; margin: 40px auto;">
+        <div class="glass-panel" style="padding: 20px;">
+            <h2 class="glass-panel-header" style="font-size: 32px; letter-spacing: 1px;">ROTOM TRAILERS STATUS</h2>
+
+            <table class="table glass-table" id="stock">
+                <thead>
+                    <tr>
+                        <th style="width: 2%;">No.</th>
+                        <th>ID</th>
+                        <th style="width: 3%;">GTDR</th>
+                        <th style="width: 15%;">DWELL TIME</th>
+                        <th>ISA</th>
+                        <th class="data-group-header styled-th th-nvf-pp">NVF PP</th>
+                        <th class="data-group-header styled-th th-pp-qty">NVF QTY</th>
+                        <th class="data-group-header styled-th th-nvf-mix">NVF MIX</th>
+                        <th class="data-group-header styled-th th-mix-qty-nvf">MIX QTY</th>
+                        <th class="data-group-header styled-th th-tsi-pax">TSI PAX</th>
+                        <th class="data-group-header styled-th th-pax-qty">PAX QTY</th>
+                        <th class="data-group-header styled-th th-tsi-mix">TSI MIX</th>
+                        <th class="data-group-header styled-th th-mix-qty-tsi">MIX QTY</th>
+                        <th>COMMENT</th>
+                        <th style="width: 15%;">LAST UPDATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trailer in rotom_trailers %}
+                    <tr class="active-stock-row">
+                        <td>{{ trailer.no }}</td>
+                        {# ID naczepy jest linkiem do historii #}
+                        <td>
+                            <a href="#"
+                               class="rotom-history-link"
+                               data-trailer-id="{{ trailer.id }}"
+                               data-url="{% url 'rotom_history' trailer_id=trailer.id %}">
+                                {{ trailer.id }}
+                            </a>
+                        </td>
+                        {# NOWA KOLUMNA Z LINKIEM DO GTDR #}
+                        <td>
+                            <a href="https://www.amazonlogistics.eu/gtdr/dashboard/vehicle_history?licenseplate={{ trailer.id }}" target="_blank" rel="noopener noreferrer" style="font-size: 24px; text-decoration: none;">
+                                📸
+                            </a>
+                        </td>
+
+                        {# Komórka Dwell Time z warunkowym kolorowaniem #}
+                        <td {% if trailer.dwell_status == 'overdue' %}
+                                style="background-color: #d60606; color: white; font-weight: bold; border: 2px solid black;"
+                            {% elif trailer.dwell_status == 'counting_down' %}
+                                style="background-color: #28a745; color: white; font-weight: bold; border: 2px solid black;"
+                            {% endif %}>
+                            {{ trailer.dwell_time }}
+                        </td>
+
+                        {% if trailer.content == 'empty' %}
+                            <td colspan="11" style="text-align: center; font-style: italic; color: #a0a0a0; background-color: rgba(40, 45, 52, 0.7) !important;">EMPTY</td>
+                        {% else %}
+                            {# Link do ISA #}
+                            <td>
+                                {% if trailer.content.ISA %}
+                                    <a href="https://fc-inbound-dock-hub-eu.aka.amazon.com/en_US/#/dockmaster/appointment/ktw5/view/{{ trailer.content.ISA }}/appointmentDetail" target="_blank" rel="noopener noreferrer">{{ trailer.content.ISA }}</a>
+                                {% endif %}
+                            </td>
+
+                            {# -- Komórki z warunkowym kolorowaniem -- #}
+                            <td {% if trailer.content.NVFPP %}style="background-color: rgba(96, 71, 56, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.NVFPP|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.NVF %}style="background-color: rgba(99, 89, 83, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.NVF|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.NVF_MIX %}style="background-color: rgba(100, 96, 62, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.NVF_MIX|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.MIX %}style="background-color: rgba(105, 102, 82, 0.851); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.MIX|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.TSI_PAX %}style="background-color: rgba(62, 74, 102, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.TSI_PAX|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.TSI %}style="background-color: rgba(73, 81, 100, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.TSI|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.TSI_MIX_P %}style="background-color: rgba(81, 72, 97, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.TSI_MIX_P|default_if_none:"" }}
+                            </td>
+                            <td {% if trailer.content.TSI_MIX_U %}style="background-color: rgba(89, 83, 98, 0.85); border-radius: 4px; box-shadow: inset 0px 1px 2px 0px rgba(255,255,255,0.1), inset 0px -1px 1px 0px rgba(0,0,0,0.15);"{% endif %}>
+                                {{ trailer.content.TSI_MIX_U|default_if_none:"" }}
+                            </td>
+
+                            {# Komórka z komentarzem #}
+                            <td>{{ trailer.content.comment|default_if_none:"" }}</td>
+                        {% endif %}
+
+                        {# Zaktualizowana komórka Last Update #}
+                        <td>{{ trailer.last_edited }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+{# Struktura HTML dla okna modalnego #}
+<div id="historyModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content glass-panel">
+        <div class="modal-header glass-panel-header">
+            <h3 id="modalTitle">History for...</h3>
+            <button id="closeModal" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="historyContent" class="history-table-container">
+                <p>Loading history...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{# Style #}
+<style>
+    /* --- Podstawowe style --- */
+    body {
+        background-color: #0d1117;
+        color: #c9d1d9;
+        font-family: 'Segoe UI', sans-serif;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        font-size: 15px;
+    }
+    a {
+        color: #58a6ff;
+        text-decoration: none;
+        outline: none;
+        background-color: transparent;
+    }
+    a:hover, a:focus {
+        color: #79bbff;
+        text-decoration: none;
+        outline: none;
+    }
+
+    /* --- Glassmorphism Base Styles --- */
+    .glass-panel, .glass-table {
+        background: rgba(30, 35, 42, 0.75);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        border: 1px solid rgba(139, 148, 158, 0.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0,0,0,0.1);
+        padding: 20px;
+        position: relative;
+    }
+    .glass-panel-header {
+        font-family: 'Segoe UI Semibold', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #c9d1d9;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.15);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+
+    /* --- Główna tabela (#stock) - Style --- */
+    .main-table-container {
+        width: 96%; margin: 25px auto; border-radius: 12px;
+        overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border: 0px solid rgba(139, 148, 158, 0.2);
+    }
+    .table.glass-table {
+        width: 100%; border-collapse: separate; border-spacing: 0;
+        padding: 0; border-radius: 0; box-shadow: none;
+        background: rgba(22, 27, 34, 0.8);
+    }
+    .table.glass-table th {
+        background: rgba(40, 45, 52, 0.85); color: #c9d1d9;
+        font-weight: 700; padding: 15px 12px;
+        letter-spacing: 0.5px; border: 2px solid rgba(60, 65, 72, 0.7);
+        border-bottom-width: 2px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: sticky; top: 0; z-index: 10;
+        text-transform: uppercase; white-space: nowrap;
+        font-size: 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table.glass-table th.styled-th {
+        position: relative;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.01) 50%, rgba(0,0,0,0.05) 100%);
+        box-shadow: inset 0px 1px 1px 0px rgba(255,255,255,0.12), inset 0px -1px 1px 0px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
+        border-bottom: 1px solid rgba(0,0,0,0.35); border-top: 1px solid rgba(255,255,255,0.06);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    }
+    .table.glass-table th.th-nvf-pp    { background-color: rgba(138, 83, 49, 0.902) !important; }
+    .table.glass-table th.th-pp-qty    { background-color: rgba(125, 101, 86, 0.902) !important; }
+    .table.glass-table th.th-nvf-mix   { background-color: rgba(120, 113, 47, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-nvf { background-color: rgba(130, 124, 65, 0.902) !important; }
+    .table.glass-table th.th-fba-sb    { background-color: rgba(57, 122, 78, 0.902) !important; }
+    .table.glass-table th.th-sb-qty    { background-color: rgba(68, 138, 90, 0.902) !important; }
+    .table.glass-table th.th-tsi-pax   { background-color: rgba(64, 85, 135, 0.902) !important; }
+    .table.glass-table th.th-pax-qty   { background-color: rgba(88, 111, 166, 0.902) !important; }
+    .table.glass-table th.th-tsi-mix   { background-color: rgba(94, 69, 135, 0.902) !important; }
+    .table.glass-table th.th-mix-qty-tsi { background-color: rgba(115, 95, 145, 0.902) !important; }
+
+    .table.glass-table td {
+        padding: 14px 12px; border: 2.5px solid rgba(60, 65, 72, 0.5);
+        position: relative; font-weight: 700;
+        text-align: center; vertical-align: middle; color: #c9d1d9;
+        transition: background-color 0.15s ease, filter 0.15s ease;
+        font-size: 20px;
+    }
+    .table.glass-table tbody td:nth-child(5) a { color: white !important; text-decoration: none !important; }
+    .table.glass-table tbody td:nth-child(5) a:hover { text-decoration: underline !important; }
+
+    .table.glass-table tbody tr:nth-child(odd) td { background-color: rgba(35, 42, 52, 0.7); }
+    .table.glass-table tbody tr:nth-child(even) td { background-color: rgba(25, 30, 38, 0.75); }
+
+    .table.glass-table tbody tr:nth-child(odd) td[style*="background-color"] { background-color: rgba(35, 42, 52, 0.7); }
+    .table.glass-table tbody tr:nth-child(even) td[style*="background-color"] { background-color: rgba(25, 30, 38, 0.75); }
+
+
+    .table.glass-table tbody tr:hover td { position: relative; }
+    .table.glass-table tbody tr:hover td::after {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(200, 200, 200, 0.1); pointer-events: none; z-index: 1;
+    }
+
+    /* Style tagów */
+    span.tag-highlight {
+        font-weight: 600; padding: 4px 10px; border-radius: 16px;
+        display: inline-block; margin: 1px 3px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.4);
+        text-transform: uppercase; font-size: 0.9em; letter-spacing: 0.5px;
+        vertical-align: middle; border: none; line-height: 1.5;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.05) 51%, rgba(0,0,0,0.1) 100%);
+        color: white;
+    }
+    span.mix-highlight { color: #ffffff; background-color: #1f7a38; }
+    span.pax-highlight { color: #ffffff; background-color: #856d4d; }
+    span.oc-highlight { color: #ffffff; background-color: #008B8B; }
+    span.tl-highlight { color: #ffffff; background-color: #CC5500; }
+    span.hv-highlight { color: #ffffff; background-color: #808000; }
+    span.cage-highlight { color: #ffffff; background-color: #aa46ce; }
+    span.unsell-highlight { color: #ffffff; background-color: #7C51C9; }
+    span.wro1_sell-highlight { color: #ffffff; background-color: #483D8B; }
+    span.rotom-highlight { color: #222222; background-color: #66CCFF; }
+    span.carrier-highlight { color: #333333; background-color: #CCCC66; }
+    span.ats-highlight { color: #ffffff; background-color: #4682B4; }
+    span.prep-highlight { color: #111111; background-color: #FFB6C1; }
+    span.oversize-highlight { color: #ffffff; background-color: #FF8C00; }
+    span.do_przebudowy-highlight,
+    span.do_streczowania-highlight { color: #ffffff; background-color: #B03060; }
+    span.double_stack-highlight { color: #ffffff; background-color: #B03060; }
+    span.do_sprawdzenia-highlight { color: #ffffff; background-color: #848482; }
+    span.karma-highlight { color: #ffffff; background-color: #D95F02; }
+
+    /* Style dla okna modalnego i linku historii */
+    a.rotom-history-link {
+        color: #8cb4ff !important;
+        text-decoration: underline !important;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    a.rotom-history-link:hover {
+        color: #a3c5ff !important;
+    }
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .modal-overlay.visible {
+        opacity: 1;
+    }
+    .modal-content {
+        max-width: 1600px; /* <-- ZMIANA: Zwiększono szerokość okna */
+        width: 95%;
+        padding: 0;
+        max-height: 90vh; /* <-- ZMIANA: Zwiększono maksymalną wysokość */
+        display: flex;
+        flex-direction: column;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        margin: 0;
+        font-size: 24px !important;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.25);
+    }
+    .modal-header h3 {
+        margin: 0;
+        font-size: 28px; /* <-- ZMIANA: Zwiększono czcionkę nagłówka */
+    }
+    .modal-close-btn {
+        background: none;
+        border: none;
+        color: #c9d1d9;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0 10px;
+        line-height: 1;
+    }
+    .modal-close-btn:hover {
+        color: #fff;
+    }
+    .modal-body {
+        padding: 25px;
+        overflow-y: auto;
+        flex-grow: 1;
+    }
+    .history-table-container {
+      width: 100%;
+    }
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 20px; /* <-- ZMIANA: Zwiększono czcionkę tabeli */
+    }
+    .history-table th, .history-table td {
+        padding: 16px 20px; /* <-- ZMIANA: Zwiększono padding */
+        text-align: left;
+        border-bottom: 1px solid rgba(139, 148, 158, 0.2);
+    }
+    .history-table th {
+        font-weight: bold;
+        color: #8cb4ff;
+        white-space: nowrap;
+    }
+    .history-table td {
+        color: #c9d1d9;
+    }
+    .history-table tr:last-child td {
+        border-bottom: none;
+    }
+    .history-table .event-type-added { color: #28a745; font-weight: bold; }
+    .history-table .event-type-deleted { color: #d60606; font-weight: bold; }
+    .history-table .event-type-edited { color: #e6c160; font-weight: bold; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Funkcja do renderowania tagów w komentarzach
+    function tagHighlight() {
+        const contentArea = document.querySelector('.table tbody');
+        if (!contentArea) return;
+
+        contentArea.querySelectorAll('tr').forEach(tr => {
+            // Indeks kolumny 'COMMENT' to 13 (licząc od 0) po dodaniu nowej kolumny
+            const td = tr.cells[13];
+            if (!td) return;
+
+            // Sprawdzenie, czy komórka zawiera tekst i nie została już przetworzona
+            let textContent = td.innerHTML;
+            if (textContent.includes('#') && !textContent.includes('<span class="')) {
+                const tagRegex = /(#(?:[A-Z0-9_]+(?: [A-Z0-9_]+)*)#)/gi;
+                let newHtml = td.innerHTML.replace(tagRegex, (match) => {
+                    const cleanedTagForClass = match.replace(/#/g, '').replace(/\s+/g, '_').toLowerCase();
+                    const tagText = match.replace(/#/g, '');
+                    const tagClass = `${cleanedTagForClass}-highlight`;
+                    return `<span class="${tagClass} tag-highlight">${tagText}</span>`;
+                });
+                if (td.innerHTML !== newHtml) {
+                    td.innerHTML = newHtml;
+                }
+            }
+        });
+    }
+
+    // Uruchomienie funkcji po załadowaniu strony
+    tagHighlight();
+
+    // Logika do obsługi okna modalnego historii
+    const modal = document.getElementById('historyModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const historyContent = document.getElementById('historyContent');
+    const closeModalBtn = document.getElementById('closeModal');
+
+    // Funkcja do zamykania modala
+    function closeModal() {
+        modal.classList.remove('visible');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300); // Czas musi pasować do transition w CSS
+    }
+
+    // Zamykanie modala po kliknięciu na przycisk X
+    closeModalBtn.addEventListener('click', closeModal);
+
+    // Zamykanie modala po kliknięciu na tło
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Zamykanie modala po wciśnięciu klawisza Escape
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.style.display !== 'none') {
+            closeModal();
+        }
+    });
+
+    // Obsługa kliknięcia w link z historią
+    document.querySelectorAll('.rotom-history-link').forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const trailerId = link.dataset.trailerId;
+            const url = link.dataset.url;
+
+            // Pokaż modal i ustaw tytuł oraz stan ładowania
+            modalTitle.textContent = `History for ${trailerId}`;
+            historyContent.innerHTML = '<p>Loading history...</p>';
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('visible'), 10);
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // Generuj HTML dla historii
+                if (data.history && data.history.length > 0) {
+                    let tableHtml = '<table class="history-table"><thead><tr><th>Date</th><th>Event</th><th>ISA</th><th>User</th><th>Details</th></tr></thead><tbody>';
+                    data.history.forEach(item => {
+                        let eventClass = '';
+                        if (item.event_type.includes('ADD')) eventClass = 'event-type-added';
+                        if (item.event_type.includes('DELETE')) eventClass = 'event-type-deleted';
+                        if (item.event_type.includes('EDIT')) eventClass = 'event-type-edited';
+
+                        tableHtml += `
+                            <tr>
+                                <td>${item.timestamp}</td>
+                                <td class="${eventClass}">${item.event_type}</td>
+                                <td>${item.isa || ''}</td>
+                                <td>${item.user || ''}</td>
+                                <td>${item.details || ''}</td>
+                            </tr>
+                        `;
+                    });
+                    tableHtml += '</tbody></table>';
+                    historyContent.innerHTML = tableHtml;
+                } else {
+                    historyContent.innerHTML = '<p>No history found for this trailer.</p>';
+                }
+
+            } catch (error) {
+                console.error('Error fetching history:', error);
+                historyContent.innerHTML = `<p style="color: #d60606;">Error loading history. Please check the console for details.</p>`;
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

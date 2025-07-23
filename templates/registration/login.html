@@ -1,0 +1,279 @@
+{% extends 'dock_nyr_base.html' %}
+{% load static %}
+
+{% block title %}Login - DOCK NYR 2.0{% endblock %}
+
+{% block content %}
+{# This div creates the dark, uniform backdrop, covering other page elements #}
+<div class="login-page-backdrop-solid"></div>
+
+<div class="login-page-wrapper">
+  <div class="login-container glass-panel"> {# Applied glass-panel #}
+    <div class="login-header-content"> {# Renamed from login-header for clarity #}
+      <div class="logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" class="amazon-logo-login" alt="Amazon">
+        <div class="logo-divider"></div>
+        <span class="ktw5-logo-login">KTW5</span>
+      </div>
+      <h2 class="login-page-title">IB DOCK NYR LOGIN</h2>
+    </div>
+    
+    {% if form.errors %}
+      <div class="login-error-message"> {# Styled like modal error messages #}
+          <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>
+          Invalid login or password. Please try again.
+      </div>
+    {% endif %}
+    
+    <form method="post" class="login-main-form"> {# Renamed from login-form #}
+      {% csrf_token %}
+      <div class="form-field-group"> {# Renamed from form-group #}
+        <label for="{{ form.username.id_for_label }}" class="form-field-label">LOGIN:</label>
+        {{ form.username }}
+      </div>
+      <div class="form-field-group">
+        <label for="{{ form.password.id_for_label }}" class="form-field-label">PASSWORD:</label>
+        {{ form.password }}
+      </div>
+      <div class="login-buttons-container">
+        <button type="submit" class="login-action-button login-primary-button">
+          <i class="fas fa-sign-in-alt"></i> LOGIN
+        </button>
+        <a href="{% url 'register' %}" class="login-action-button login-secondary-button">
+          <i class="fas fa-user-plus"></i> REGISTER
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Styles for the login page, with panel and contents scaled up by ~1.5x */
+/* Assumes body zoom:0.5 from base.html. */
+
+.login-page-backdrop-solid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0d1117; /* Solid, very dark color */
+  z-index: 1000; 
+}
+
+.login-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  height: 100%; 
+  padding: 20px; /* Padding for the wrapper, not the panel itself */
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+}
+
+.login-container.glass-panel {
+  width: 100%;
+  /* Previous max-width: 550px. Scaled by 1.5x: 550 * 1.5 = 825px */
+  max-width: 825px; 
+  /* Previous padding: 35px 45px. Scaled: (35*1.5)px (45*1.5)px = 52.5px 67.5px. Rounded. */
+  padding: 52px 67px; 
+  box-shadow: 0 24px 75px rgba(0, 0, 0, 0.5); /* Increased shadow */
+  border-radius: 20px; /* Slightly larger radius, consistent with scaled register */
+}
+
+.login-header-content {
+  text-align: center;
+  /* Previous margin-bottom: 30px. Scaled: 30 * 1.5 = 45px */
+  margin-bottom: 45px; 
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Previous gap: 20px. Scaled: 20 * 1.5 = 30px */
+  gap: 30px; 
+  /* Previous margin-bottom: 25px. Scaled: 25 * 1.5 = 37.5px. Rounded to 37px or 38px */
+  margin-bottom: 37px; 
+}
+
+.amazon-logo-login {
+  /* Previous height: 30px. Scaled: 30 * 1.5 = 45px */
+  height: 45px; 
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.logo-divider {
+  /* Previous height: 30px. Scaled: 30 * 1.5 = 45px */
+  height: 45px; 
+  /* Previous width: 1.5px. Scaled: 1.5 * 1.5 = 2.25px. Rounded to 2px. */
+  width: 2px; 
+  background: rgba(210, 210, 255, 0.25);
+  border-radius: 2px;
+}
+
+.ktw5-logo-login {
+  color: #00A7FF;
+  /* Previous font-size: 28px. Scaled: 28 * 1.5 = 42px */
+  font-size: 42px; 
+  font-weight: 800;
+  letter-spacing: 1.5px; /* Scaled slightly */
+}
+
+.login-page-title {
+  color: #f0f6fc;
+  /* Previous font-size: 26px. Scaled: 26 * 1.5 = 39px */
+  font-size: 39px; 
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.75px; /* Scaled slightly */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-main-form {
+  display: flex;
+  flex-direction: column;
+  /* Previous gap: 22px. Scaled: 22 * 1.5 = 33px */
+  gap: 33px; 
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  /* Previous gap: 8px. Scaled: 8 * 1.5 = 12px */
+  gap: 12px; 
+}
+
+.form-field-label {
+  color: #adb5bd;
+  /* Previous font-size: 16px. Scaled: 16 * 1.5 = 24px */
+  font-size: 24px; 
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.login-main-form input[type="text"],
+.login-main-form input[type="password"] {
+  width: 100%;
+  /* Previous padding: 14px 18px. Scaled: (14*1.5) (18*1.5) = 21px 27px */
+  padding: 21px 27px; 
+  background: rgba(13, 17, 23, 0.9);
+  border: 1px solid rgba(139, 148, 158, 0.35);
+  color: #c9d1d9;
+  /* Previous font-size: 17px. Scaled: 17 * 1.5 = 25.5px. Rounded to 25px. */
+  font-size: 25px; 
+  font-weight: 500;
+  box-sizing: border-box;
+  border-radius: 10px; /* Scaled radius */
+  transition: all 0.2s ease;
+}
+
+.login-main-form input[type="text"]:focus,
+.login-main-form input[type="password"]:focus {
+  outline: none;
+  border-color: #58a6ff;
+  background: rgba(22, 27, 34, 0.95);
+  /* Shadow scaled by 1.5 (3px * 1.5 = 4.5px) */
+  box-shadow: 0 0 0 4.5px rgba(88, 166, 255, 0.25); 
+}
+
+.login-buttons-container {
+  display: flex;
+  flex-direction: column;
+  /* Previous gap: 15px. Scaled: 15 * 1.5 = 22.5px. Rounded to 22px. */
+  gap: 22px; 
+  /* Previous margin-top: 25px. Scaled: 25 * 1.5 = 37.5px. Rounded. */
+  margin-top: 37px; 
+}
+
+.login-action-button {
+  /* Previous padding: 15px 20px. Scaled: (15*1.5) (20*1.5) = 22.5px 30px */
+  padding: 22px 30px; 
+  /* Previous font-size: 17px. Scaled: 17 * 1.5 = 25.5px. Rounded to 25px. */
+  font-size: 25px;    
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px; /* Scaled */
+  width: 100%;
+  border-radius: 10px; /* Scaled */
+  color: #fff !important;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Previous gap: 10px. Scaled: 10 * 1.5 = 15px */
+  gap: 15px; 
+  border: 1px solid transparent;
+  transition: all 0.25s ease-out;
+  box-sizing: border-box;
+
+  background: rgba(80, 80, 110, 0.65);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-color: rgba(200, 200, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.login-action-button:hover {
+  background: rgba(95, 95, 125, 0.85);
+  border-color: rgba(220, 220, 255, 0.45);
+  box-shadow: 0 6px 27px rgba(0,0,0,0.25); /* Scaled shadow */
+  transform: translateY(-3px); /* Scaled hover effect */
+}
+.login-action-button:active {
+  transform: translateY(0px) scale(0.98);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.login-primary-button { /* LOGIN button - Green */
+  background: linear-gradient(135deg, rgba(20, 170, 70, 0.7), rgba(15, 140, 55, 0.8)) !important;
+  border-color: rgba(20, 170, 70, 0.5) !important;
+}
+.login-primary-button:hover {
+  background: linear-gradient(135deg, rgba(25, 190, 80, 0.85), rgba(20, 160, 65, 0.95)) !important;
+  border-color: rgba(25, 190, 80, 0.7) !important;
+}
+
+.login-secondary-button { /* REGISTER button - Blue */
+  background: linear-gradient(135deg, rgba(0, 110, 220, 0.7), rgba(0, 80, 190, 0.8)) !important;
+  border-color: rgba(0, 110, 220, 0.5) !important;
+}
+.login-secondary-button:hover {
+  background: linear-gradient(135deg, rgba(10, 125, 235, 0.85), rgba(5, 95, 210, 0.95)) !important;
+  border-color: rgba(10, 125, 235, 0.7) !important;
+}
+
+.login-error-message {
+  color: #ff9a9a; 
+  /* Previous font-size: 15px. Scaled: 15 * 1.5 = 22.5px. Rounded to 22px. */
+  font-size: 22px; 
+  text-align: center;
+  /* Previous margin-bottom: 20px. Scaled: 20 * 1.5 = 30px */
+  margin-bottom: 30px; 
+  font-weight: 500;
+  background-color: rgba(200, 50, 60, 0.25); 
+  /* Previous padding: 12px 18px. Scaled: (12*1.5) (18*1.5) = 18px 27px */
+  padding: 18px 27px; 
+  border-radius: 10px; /* Scaled radius */
+  border: 1px solid rgba(200, 50, 60, 0.45); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-error-message .fas {
+    font-size: 1.1em;
+}
+
+</style>
+
+{% block extrahead %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
+
+{% endblock %}
