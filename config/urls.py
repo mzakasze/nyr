@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include  # Upewnij siê, ¿e jest tu "include"
+from django.http import HttpResponse
+from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dock_nyr.urls')),  
+    path('', include('dock_nyr.urls')),
+    path('', lambda request: HttpResponse("OK")),    
 ]
